@@ -1,39 +1,135 @@
 package glotovs_cariks;
 
+import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
-public class Pokedatnis {
+public class Pokedatnis extends JFrame { 
 
     static Treneris speletajs; 
     static ArrayList<Pokemons> visiPokemoni = new ArrayList<>(); 
 
-    public static void main(String[] args) {
-        
-        String vards = Metodes.ievaditTekstu("Sveicināti Pokemonu pasaulē!\nIevadiet savu Trenera vārdu:");
-        
-        if (vards == null) {
-            System.exit(0);
-        }
-        
-        speletajs = new Treneris(vards);
-        Metodes.info("Sveiks, treneri " + speletajs.getVards() + "!");
+    private JPanel kreisaPuse;      // Kreisa puse: fons/galvenais attels
+    private JPanel labaPuse;        // Laba puse: pogas
 
-        boolean darbaRezims = true;
-        while (darbaRezims) {
-            String[] izvelne = {"Izveidot Pokemonu", "Mana komanda", "Visi pasaules pokemoni", "TURNĪRS (Cīņa)", "Iziet"};
-            int izvele = JOptionPane.showOptionDialog(null, "Izvēlne. Treneris: " + speletajs.getVards(), "Pokedatnis",
-                    0, JOptionPane.INFORMATION_MESSAGE, null, izvelne, izvelne[0]);
+    // --- Konfigūracija ---
+    public Pokedatnis() {
+        // Iestatījumi
+        setTitle("Pokedatnis"); 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLayout(new BorderLayout()); 
+        
+        // Noņemam virsrakstu, lai iegūtu tīru logu
+        setUndecorated(true);
+        
+        // Paneļu izveide
+        kreisaPuse = izveidotKreisoPaneli();
+        labaPuse = izveidotLeboPaneli();
 
-            switch (izvele) {
-                case 0: izveidotPokemonu(); break;
-                case 1: paraditKomandu(); break;
-                case 2: paraditVisus(); break;
-                case 3: organizetCinu(); break;
-                case 4: case -1: darbaRezims = false; break;
-            }
-        }
+        add(kreisaPuse, BorderLayout.CENTER); 
+        add(labaPuse, BorderLayout.EAST);      
+
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
+    
+    private JPanel izveidotKreisoPaneli() {
+        JPanel panelis = new JPanel(new BorderLayout());
+        
+        final int FONA_IZMERS = 600; 
+        
+        JLabel fonaAttels = VizualaMetodes.ieladetFonu("fons.png", FONA_IZMERS, FONA_IZMERS);
+        panelis.add(fonaAttels, BorderLayout.CENTER);
+        return panelis;
+    }
+
+    private JPanel izveidotLeboPaneli() {
+        JPanel panelis = new JPanel();
+        panelis.setLayout(new BoxLayout(panelis, BoxLayout.Y_AXIS));
+        panelis.setPreferredSize(new Dimension(200, 0)); 
+        panelis.setBackground(new Color(100, 100, 100)); 
+
+        // VerticalGlue pievelk komponentes pie apakšas (vai augšas, atkarībā no izvietojuma)
+        panelis.add(Box.createVerticalGlue()); 
+        
+        // Pogu izvietojums (Sākot no apakšas uz augšu): Izveidot, Komanda, Visi, Turnīrs, Iziet
+
+        // 1. IZVEIDOT POKEMONU - Vismazākā pozīcija Y asī (apakšā)
+        panelis.add(VizualaMetodes.izveidotAttelaPogu("Izveidot", e -> izveidotPokemonu()));
+        panelis.add(Box.createVerticalStrut(10)); 
+
+        // 2. MANA KOMANDA
+        panelis.add(VizualaMetodes.izveidotAttelaPogu("Komanda", e -> paraditKomandu()));
+        panelis.add(Box.createVerticalStrut(10)); 
+
+        // 3. VISI POKEMONI
+        panelis.add(VizualaMetodes.izveidotAttelaPogu("Visi", e -> paraditVisus()));
+        panelis.add(Box.createVerticalStrut(10)); 
+
+        // 4. TURNĪRS
+        panelis.add(VizualaMetodes.izveidotAttelaPogu("Turnirs", e -> organizetCinu()));
+        panelis.add(Box.createVerticalStrut(10)); 
+        
+        // 5. IZVIET - Augšējā pozīcija Y asī
+        panelis.add(VizualaMetodes.izveidotAttelaPogu("Iziet", e -> System.exit(0)));
+
+        panelis.add(Box.createVerticalStrut(20)); // Atstarpe no apakšas
+
+        return panelis;
+    }
+    
+    // --- Jauns metodes, lai aizvietotu sākotnējo JOptionPane ---
+    public static void saktSpeli() {
+        // Izveidojam jaunu, mazāku dialogu
+        JDialog dialogs = new JDialog((Frame) null, "Trenera vārds", true); // true padara to modālu
+        dialogs.setUndecorated(true); // Tīrs dizains arī dialogam
+        dialogs.setSize(350, 150);
+        dialogs.setLayout(new BorderLayout(10, 10));
+        dialogs.setLocationRelativeTo(null);
+
+        JLabel zinojums = new JLabel("Sveicināti! Ievadiet savu Trenera vārdu:", SwingConstants.CENTER);
+        JTextField vardaLauks = new JTextField(20);
+        JButton apstiprinat = new JButton("Apstiprināt");
+
+        // Paneli ievades un pogu novietošanai
+        JPanel apaksejaDala = new JPanel(new FlowLayout());
+        apaksejaDala.add(vardaLauks);
+        apaksejaDala.add(apstiprinat);
+
+        dialogs.add(zinojums, BorderLayout.NORTH);
+        dialogs.add(apaksejaDala, BorderLayout.SOUTH);
+        
+        // Klausītājs
+        apstiprinat.addActionListener(e -> {
+            String vards = vardaLauks.getText().trim();
+            if (!vards.isEmpty()) {
+                speletajs = new Treneris(vards);
+                dialogs.dispose(); // Aizver dialogu
+                Metodes.info("Sveiks, treneri " + speletajs.getVards() + "!");
+                SwingUtilities.invokeLater(() -> new Pokedatnis()); // Sākam galveno GUI
+            } else {
+                JOptionPane.showMessageDialog(dialogs, "Vārds nedrīkst būt tukšs!");
+            }
+        });
+        
+        // Ja logs tiek aizvērts/atcelts (kas sarežģīti, jo nav rāmja), aizveram programmu
+        dialogs.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        dialogs.setVisible(true); // Blokus, kamēr lietotājs neievada vārdu
+        
+        // Pārbaudām, vai treneris tika inicializēts
+        if (speletajs == null) System.exit(0);
+    }
+    
+    // --- Galvenā MAIN daļa ---
+    public static void main(String[] args) {
+        // Tiek izsaukts jaunais dialogs pirms galvenā loga ielādes
+        SwingUtilities.invokeLater(() -> saktSpeli());
+    }
+
+    // --- SPĒLES LOGIKAS METODES (Bez izmaiņām, tikai atkārtojums pilnīgai kopēšanai) ---
 
     public static void izveidotPokemonu() {
         String[] ipasnieki = {"Man (Trenerim)", "Savvaļas (Neviena)"};
@@ -55,7 +151,7 @@ public class Pokedatnis {
 
         int hp = Metodes.ievaditSkaitliRobezas("Dzīvība (HP):", 50, 200);
         int atk = Metodes.ievaditSkaitliRobezas("Uzbrukuma spēks:", 5, 50);
-        int def = Metodes.ievaditSkaitliRobezas("Aizsardzība (%):", 0, 30); 
+        int def = Metodes.ievaditSkaitliRobezas("Aizsardzība (%):", 0, 75); 
 
         Pokemons jaunsP = null;
         
