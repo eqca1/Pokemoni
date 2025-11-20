@@ -71,7 +71,7 @@ public class Pokedatnis extends JFrame {
             attels.setText("<html><center>Sveicināti Pokemonu Arēnā!<br><br>Trenera vārds: " + speletajs.getVards() + 
                           "<br>Pokemonu skaits: " + visiPokemoni.size() + 
                           "<br><br>Izvēlieties darbību labajā pusē!</center></html>");
-            attels.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            attels.setFont(VizualaMetodes.FONTS_TEKSTS);
             attels.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
             attels.setHorizontalAlignment(SwingConstants.CENTER);
         }
@@ -80,19 +80,30 @@ public class Pokedatnis extends JFrame {
         // LABĀ PUSE - IZVĒLŅU POGA
         JPanel labaPuse = new JPanel();
         labaPuse.setOpaque(false);
-        labaPuse.setLayout(new GridLayout(6, 1, 0, 20)); 
+        labaPuse.setLayout(new GridLayout(6, 1, 0, 15)); 
 
         // GALVENĀS POGA
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Izveidot Jaunu Pokemonu", e -> izveidotPokemonu()));
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Mana Pokemonu Komanda", e -> paraditManoKomandu()));
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Visu Pokemonu Saraksts", e -> paraditVisusPokemonus()));
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Sākt Cīņu", e -> saktiesCinu()));
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Spēles Noteikumi", e -> paraditNoteikumus()));
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Iziet no Spēles", e -> System.exit(0)));
 
         saturs.add(kreisaPuse);
         saturs.add(labaPuse);
         galvenaisPanelis.add(saturs, BorderLayout.CENTER);
 
-
+        // PANELIS APAKŠĀ - STATISTIKA
+        JPanel apaksa = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        apaksa.setOpaque(false);
+        JLabel statistika = new JLabel("Treneris: " + speletajs.getVards() + " | Komandā: " + 
+                                     speletajs.getKomandasIzmers() + " pokemoni | Kopā datubāzē: " + 
+                                     visiPokemoni.size() + " pokemoni");
+        statistika.setForeground(VizualaMetodes.TEKSTS_PELMONS);
+        statistika.setFont(VizualaMetodes.FONTS_TEKSTS);
+        apaksa.add(statistika);
+        galvenaisPanelis.add(apaksa, BorderLayout.SOUTH);
 
         // PĀRVIETOŠANAS FUNKCIJA
         VizualaMetodes.padaritParietojamu(galvenaisPanelis, this);
@@ -188,7 +199,7 @@ public class Pokedatnis extends JFrame {
         JDialog dialogs = new JDialog((Frame)null, true);
         dialogs.setUndecorated(true);
         dialogs.setBackground(new Color(0,0,0,0));
-        dialogs.setSize(600, 500);
+        dialogs.setSize(650, 550);
         dialogs.setLocationRelativeTo(null);
 
         JPanel panelis = new JPanel(new BorderLayout());
@@ -203,12 +214,8 @@ public class Pokedatnis extends JFrame {
         panelis.add(virsraksts, BorderLayout.NORTH);
 
         // TEKSTA LAUKS AR POKEMONU INFORMĀCIJU
-        JTextArea tekstaLauks = new JTextArea();
+        JTextArea tekstaLauks = VizualaMetodes.izveidotStiliguTekstaApgabalu();
         tekstaLauks.setEditable(false);
-        tekstaLauks.setBackground(VizualaMetodes.PANELA_FONS);
-        tekstaLauks.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
-        tekstaLauks.setFont(new Font("Consolas", Font.PLAIN, 14));
-        tekstaLauks.setMargin(new Insets(15,15,15,15));
         
         // ATJAUNOT TEKSTU
         Runnable atjaunotTekstu = () -> {
@@ -223,26 +230,24 @@ public class Pokedatnis extends JFrame {
         };
         atjaunotTekstu.run();
 
-        JScrollPane scroll = new JScrollPane(tekstaLauks);
+        JScrollPane scroll = VizualaMetodes.izveidotStiliguScrollPane(tekstaLauks);
         scroll.setBorder(new EmptyBorder(15, 25, 15, 25));
-        scroll.getViewport().setBackground(VizualaMetodes.PANELA_FONS);
-        scroll.setBorder(null);
         panelis.add(scroll, BorderLayout.CENTER);
 
         // APAKŠĒJAIS PANELIS AR POGA
         JPanel poguPanelis = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 20));
         poguPanelis.setOpaque(false);
 
-        JButton dziedetPoga = VizualaMetodes.izveidotStiliguPogu("Dziedēt Visus Pokemonus", e -> {
-            for (Pokemons p : speletajs.getKomanda()) {
-                while(p.getDziviba() < p.getMaxDziviba()) {
-                    p.dziedet();
+        JButton dziedetPoga = VizualaMetodes.izveidotStiliguPogu("Dziedēt Visus Pokemonus", 
+            VizualaMetodes.ZALS_IESPEJAMS, e -> {
+                for (Pokemons p : speletajs.getKomanda()) {
+                    while(p.getDziviba() < p.getMaxDziviba()) {
+                        p.dziedet();
+                    }
                 }
-            }
-            atjaunotTekstu.run();
-            JOptionPane.showMessageDialog(dialogs, "Visi pokemoni komandā ir pilnībā izārstēti un atguvuši spēkus!");
-        });
-        dziedetPoga.setBackground(new Color(46, 204, 113));
+                atjaunotTekstu.run();
+                Metodes.info("Visi pokemoni komandā ir pilnībā izārstēti un atguvuši spēkus!");
+            });
 
         JButton aizvertPoga = VizualaMetodes.izveidotStiliguPogu("Aizvērt", e -> dialogs.dispose());
 
@@ -265,7 +270,7 @@ public class Pokedatnis extends JFrame {
         JDialog dialogs = new JDialog((Frame)null, true);
         dialogs.setUndecorated(true);
         dialogs.setBackground(new Color(0,0,0,0));
-        dialogs.setSize(700, 600);
+        dialogs.setSize(750, 600);
         dialogs.setLocationRelativeTo(null);
 
         JPanel panelis = new JPanel(new BorderLayout());
@@ -278,12 +283,8 @@ public class Pokedatnis extends JFrame {
         virsraksts.setBorder(new EmptyBorder(20,0,20,0));
         panelis.add(virsraksts, BorderLayout.NORTH);
 
-        JTextArea tekstaLauks = new JTextArea();
+        JTextArea tekstaLauks = VizualaMetodes.izveidotStiliguTekstaApgabalu();
         tekstaLauks.setEditable(false);
-        tekstaLauks.setBackground(VizualaMetodes.PANELA_FONS);
-        tekstaLauks.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
-        tekstaLauks.setFont(new Font("Consolas", Font.PLAIN, 13));
-        tekstaLauks.setMargin(new Insets(15,15,15,15));
         
         String visiPokemoniInfo = "";
         int numurs = 1;
@@ -294,9 +295,8 @@ public class Pokedatnis extends JFrame {
         tekstaLauks.setText(visiPokemoniInfo);
         tekstaLauks.setCaretPosition(0);
 
-        JScrollPane scroll = new JScrollPane(tekstaLauks);
+        JScrollPane scroll = VizualaMetodes.izveidotStiliguScrollPane(tekstaLauks);
         scroll.setBorder(new EmptyBorder(15, 25, 15, 25));
-        scroll.getViewport().setBackground(VizualaMetodes.PANELA_FONS);
         panelis.add(scroll, BorderLayout.CENTER);
 
         JButton aizvertPoga = VizualaMetodes.izveidotStiliguPogu("Aizvērt", e -> dialogs.dispose());
@@ -341,7 +341,7 @@ public class Pokedatnis extends JFrame {
         }
         
         if (pieejamiePretinieki.isEmpty()) {
-            Metodes.info("Šobrīd nav pieejamu pretinieku! Izveido savvaļas pokemonus vai pagaidi turnīru.");
+            Metodes.info("Šobrīd nav pieejamu pretinieku! Izveido savvaļas pokemonus.");
             return;
         }
         
@@ -424,5 +424,27 @@ public class Pokedatnis extends JFrame {
             
             raunds++;
         }
+    }
+
+    // RĀDĪT NOTEIKUMUS
+    public static void paraditNoteikumus() {
+        String noteikumi = "=== POKEMONU CĪŅU NOTEIKUMI ===\n\n" +
+                          "1. KATRS POKEMONS IR SAVA TIPA\n" +
+                          "   • Parastais - vienkārši uzbrukumi\n" +
+                          "   • Elektriskais - augsta voltāža, spēcīgi uzbrukumi\n" +
+                          "   • Ūdens - var nirt, negaidīti uzbrukt\n\n" +
+                          "2. CĪŅAS MECHANIKA\n" +
+                          "   • Katrs pokemons ir HP, ATK, DEF\n" +
+                          "   • Aizsardzība samazina saņemto bojājumu\n" +
+                          "   • Speciālās spējas dod papildu priekšrocības\n\n" +
+                          "3. ATTĪSTĪBA\n" +
+                          "   • Uzvarot cīņās, pokemoni iegūst līmeni\n" +
+                          "   • Katrs līmenis palielina HP, ATK, DEF\n\n" +
+                          "4. STRATĒĢIJA\n" +
+                          "   • Izmanto dziedēšanu, kad HP zems\n" +
+                          "   • Speciālās spējas dod taktisko priekšrocību\n" +
+                          "   • Veido dažādu tipu komandu!";
+        
+        VizualaMetodes.paraditIzklaidesLogu("Spēles Noteikumi", noteikumi);
     }
 }
