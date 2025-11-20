@@ -6,110 +6,119 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-// GALVENĀ KLASE
+// GALVENAIS SPĒLES LOGS
 public class Pokedatnis extends JFrame { 
 
-    static Treneris speletajs; 
-    static ArrayList<Pokemons> visiPokemoni = new ArrayList<>(); 
+    private static Treneris speletajs; 
+    private static ArrayList<Pokemons> visiPokemoni = new ArrayList<>(); 
     
     private JPanel galvenaisPanelis;
-    private float caurspidigums = 0.0f; // Animācijai
+    private float caurspidigums = 0.0f;
 
     public Pokedatnis() {
-        // --- LOGA IESTATĪJUMI ---
-        setTitle("Pokedatnis Ultimate"); 
+        // LOGA IESTATĪJUMI
+        setTitle("Pokedatnis - Pokemonu Cīņu Sistēma"); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(900, 600);
-        setUndecorated(true); // SVARĪGI: Noņem balto augšējo joslu
-        setBackground(new Color(0,0,0,0)); // Caurspīdīgs fons, lai darbotos noapaļotie stūri
+        setSize(1000, 700);
+        setUndecorated(true);
+        setBackground(new Color(0,0,0,0));
         setLocationRelativeTo(null);
 
-        // --- GALVENAIS FONDA PANELIS ---
+        // GALVENAIS PANELIS AR APAĻIEM STŪRIEM
         galvenaisPanelis = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(VizualaMetodes.GALVENAIS_FONS);
-                // Zīmējam fonu ar noapaļotiem stūriem
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
-                // Zīmējam sarkanu apmali (pēc izvēles)
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 50, 50);
                 g2.setColor(VizualaMetodes.AKCENTS);
-                g2.setStroke(new BasicStroke(2));
-                g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 40, 40);
+                g2.setStroke(new BasicStroke(3));
+                g2.drawRoundRect(2, 2, getWidth()-4, getHeight()-4, 50, 50);
             }
         };
-        galvenaisPanelis.setBorder(new EmptyBorder(20, 20, 20, 20));
+        galvenaisPanelis.setBorder(new EmptyBorder(25, 25, 25, 25));
         setContentPane(galvenaisPanelis);
 
-        // --- AUGŠĒJĀ JOSLA (Virsraksts + Aizvērt) ---
+        // AUGŠĒJĀ JOSLA - VIRSRKSTS UN AIZVĒRŠANAS POGA
         JPanel augsa = new JPanel(new BorderLayout());
         augsa.setOpaque(false);
         
-        JLabel virsraksts = new JLabel("  POKEDATNIS: ARĒNA", SwingConstants.LEFT);
+        JLabel virsraksts = new JLabel("  POKEDATNIS - POKEMONU CĪŅU ARĒNA", SwingConstants.LEFT);
         virsraksts.setFont(VizualaMetodes.FONTS_VIRSRKSTS);
         virsraksts.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
         
         JButton aizvertPoga = VizualaMetodes.izveidotStiliguPogu("X", e -> System.exit(0));
-        aizvertPoga.setBackground(VizualaMetodes.AKCENTS);
-        aizvertPoga.setPreferredSize(new Dimension(50, 40));
+        aizvertPoga.setBackground(new Color(192, 57, 43));
+        aizvertPoga.setPreferredSize(new Dimension(60, 45));
 
         augsa.add(virsraksts, BorderLayout.CENTER);
         augsa.add(aizvertPoga, BorderLayout.EAST);
         galvenaisPanelis.add(augsa, BorderLayout.NORTH);
 
-        // --- CENTRĀLAIS SATURS (Sadalīts 2 daļās) ---
-        JPanel saturs = new JPanel(new GridLayout(1, 2, 20, 0));
+        // CENTRĀLAIS SATURS
+        JPanel saturs = new JPanel(new GridLayout(1, 2, 30, 0));
         saturs.setOpaque(false);
-        saturs.setBorder(new EmptyBorder(20, 0, 20, 0));
+        saturs.setBorder(new EmptyBorder(30, 0, 30, 0));
 
-        // KREISĀ PUSE: Informatīvais panelis
+        // KREISĀ PUSE - INFORMĀCIJAS PANELIS
         JPanel kreisaPuse = VizualaMetodes.izveidotApaluPaneli();
         kreisaPuse.setLayout(new BorderLayout());
-        kreisaPuse.setBorder(new EmptyBorder(15, 15, 15, 15));
+        kreisaPuse.setBorder(new EmptyBorder(20, 20, 20, 20));
         
-        JLabel attels = VizualaMetodes.ieladetFonu("fons.png", 350, 350);
+        JLabel attels = VizualaMetodes.ieladetFonu("pokemon_fons.png", 400, 400);
         if (attels.getIcon() == null) {
-            attels.setText("<html><center>Sveicināti Arēnā!<br>Izvēlieties darbību.</center></html>");
-            attels.setFont(VizualaMetodes.FONTS_VIRSRKSTS);
-            attels.setForeground(VizualaMetodes.TEKSTS_PELMONS);
+            attels.setText("<html><center>Sveicināti Pokemonu Arēnā!<br><br>Trenera vārds: " + speletajs.getVards() + 
+                          "<br>Pokemonu skaits: " + visiPokemoni.size() + 
+                          "<br><br>Izvēlieties darbību labajā pusē!</center></html>");
+            attels.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            attels.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
             attels.setHorizontalAlignment(SwingConstants.CENTER);
         }
         kreisaPuse.add(attels, BorderLayout.CENTER);
 
-        // LABĀ PUSE: Izvēlne ar pogām
+        // LABĀ PUSE - IZVĒLŅU POGA
         JPanel labaPuse = new JPanel();
         labaPuse.setOpaque(false);
-        labaPuse.setLayout(new GridLayout(5, 1, 0, 15)); 
+        labaPuse.setLayout(new GridLayout(6, 1, 0, 20)); 
 
-        // POGAS
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Izveidot Pokemonu", e -> izveidotPokemonu()));
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Mana Komanda", e -> paraditKomandu())); // Šeit tagad ir dziedināšana
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Visi Pokemoni", e -> paraditVisus()));
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Sākt Turnīru", e -> organizetCinu()));
-        
-        // Iepriekšējā poga "Noteikumi" ir dzēsta, tās vietā var ielikt tukšumu vai atstāt 4 pogas
-        // Lai saglabātu izkārtojumu, pievienojam neredzamu vietu vai vienkārši atstājam pogas izstiepties
-        // Šajā gadījumā GridLayout automātiski pielāgos izmērus.
+        // GALVENĀS POGA
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Izveidot Jaunu Pokemonu", e -> izveidotPokemonu()));
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Mana Pokemonu Komanda", e -> paraditManoKomandu()));
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Visi Pokemoni Datubāzē", e -> paraditVisusPokemonus()));
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Sākt Cīņu", e -> saktiesCinu()));
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Organizēt Turnīru", e -> organizetTurniru()));
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Spēles Noteikumi", e -> paraditNoteikumus()));
 
         saturs.add(kreisaPuse);
         saturs.add(labaPuse);
         galvenaisPanelis.add(saturs, BorderLayout.CENTER);
 
-        // Iespēja pārvietot logu ar peli
+        // PANELIS APAKŠĀ - STATISTIKA
+        JPanel apaksa = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        apaksa.setOpaque(false);
+        JLabel statistika = new JLabel("Treneris: " + speletajs.getVards() + " | Komandā: " + 
+                                     speletajs.getKomandasIzmers() + " pokemoni | Kopā datubāzē: " + 
+                                     visiPokemoni.size() + " pokemoni");
+        statistika.setForeground(VizualaMetodes.TEKSTS_PELMONS);
+        statistika.setFont(VizualaMetodes.FONTS_TEKSTS);
+        apaksa.add(statistika);
+        galvenaisPanelis.add(apaksa, BorderLayout.SOUTH);
+
+        // PĀRVIETOŠANAS FUNKCIJA
         VizualaMetodes.padaritParietojamu(galvenaisPanelis, this);
         
         setVisible(true);
-        animacijaParadities(); 
+        animacijaParadities();
     }
 
-    // --- ANIMĀCIJA: Loga lēna parādīšanās ---
+    // ANIMĀCIJA - LOGS PARĀDĀS LĒNI
     private void animacijaParadities() {
         setOpacity(0.0f);
-        Timer timer = new Timer(20, new ActionListener() {
+        Timer timer = new Timer(25, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                caurspidigums += 0.05f;
+                caurspidigums += 0.04f;
                 if (caurspidigums >= 1.0f) {
                     caurspidigums = 1.0f;
                     setOpacity(1.0f);
@@ -122,12 +131,19 @@ public class Pokedatnis extends JFrame {
         timer.start();
     }
     
-    // --- SPĒLES SĀKUMS (LOGIN LOGS) ---
+    // SPĒLES SĀKUMS - TRENERA IEVADE
     public static void saktSpeli() {
-        String vards = Metodes.ievaditTekstu("Sveiks, Treneri! Ievadi savu vārdu:");
+        String vards = Metodes.ievaditTekstu("Sveiks, drosmīgais Pokemonu treneri! Ievadi savu vārdu:");
         
         if (vards != null && !vards.isEmpty()) {
             speletajs = new Treneris(vards);
+            // PIEVIENO PĀRIS STARTER POKEMONUS
+            Pokemons starter1 = new ParastaisP("Pikachu", vards, 80, 25, 10);
+            Pokemons starter2 = new UdensP("Squirtle", vards, 90, 20, 15);
+            visiPokemoni.add(starter1);
+            visiPokemoni.add(starter2);
+            speletajs.pievienotPokemonu(starter1);
+            
             SwingUtilities.invokeLater(() -> new Pokedatnis());
         } else {
             System.exit(0);
@@ -139,107 +155,111 @@ public class Pokedatnis extends JFrame {
         SwingUtilities.invokeLater(() -> saktSpeli());
     }
 
-    // --- LOĢIKAS METODES ---
+    // === METODES ===
     
+    // IZVEIDOT JAUNU POKEMONU
     public static void izveidotPokemonu() {
-        String[] ipasnieki = {"Man (Trenerim)", "Savvaļas"};
-        int kamPiederIndex = Metodes.raditIzveli("Īpašnieks", "Kam pieder šis pokemons?", ipasnieki);
+        String[] ipasnieki = {"Man (Trenerim)", "Savvaļas Pokémon"};
+        int kamPiederIndex = Metodes.raditIzveli("Pokemona Īpašnieks", "Kam piederēs šis pokemons?", ipasnieki);
         if(kamPiederIndex == -1) return;
         
         String ipasnieks = (kamPiederIndex == 0) ? speletajs.getVards() : "Savvaļas";
         
         String[] tipi = {"Parastais", "Elektriskais", "Ūdens"};
-        int tips = Metodes.raditIzveli("Tips", "Izvēlies pokemona tipu:", tipi);
-        if (tips == -1) return;
+        int tipsIndex = Metodes.raditIzveli("Pokemona Tips", "Izvēlies pokemona tipu:", tipi);
+        if (tipsIndex == -1) return;
         
-        String pVards = Metodes.ievaditTekstu("Ievadi pokemona vārdu:");
-        if(pVards == null) return;
+        String pokemonaVards = Metodes.ievaditTekstu("Ievadi pokemona vārdu:");
+        if(pokemonaVards == null) return;
         
-        int hp = Metodes.ievaditSkaitliRobezas("Dzīvība (HP):", 50, 200);
-        int atk = Metodes.ievaditSkaitliRobezas("Uzbrukums (ATK):", 5, 50);
-        int def = Metodes.ievaditSkaitliRobezas("Aizsardzība (DEF %):", 0, 30);
+        int dziviba = Metodes.ievaditSkaitliRobezas("Pokemona dzīvības punkti (HP):", 50, 250);
+        int uzbrukums = Metodes.ievaditSkaitliRobezas("Uzbrukuma spēks (ATK):", 10, 60);
+        int aizsardziba = Metodes.ievaditSkaitliRobezas("Aizsardzības līmenis (DEF %):", 5, 40);
         
-        Pokemons p = null;
-        if(tips == 0) p = new ParastaisP(pVards, ipasnieks, hp, atk, def);
-        else if(tips == 1) {
-            int v = Metodes.ievaditSkaitliRobezas("Voltāža (V):", 10, 200);
-            p = new ElektriskaisP(pVards, ipasnieks, hp, atk, def, v);
+        Pokemons jaunaisPokemons = null;
+        
+        if(tipsIndex == 0) {
+            jaunaisPokemons = new ParastaisP(pokemonaVards, ipasnieks, dziviba, uzbrukums, aizsardziba);
+        } else if(tipsIndex == 1) {
+            int voltaza = Metodes.ievaditSkaitliRobezas("Elektriskā pokemona voltāža (V):", 20, 250);
+            jaunaisPokemons = new ElektriskaisP(pokemonaVards, ipasnieks, dziviba, uzbrukums, aizsardziba, voltaza);
         } else {
-            p = new UdensP(pVards, ipasnieks, hp, atk, def);
+            jaunaisPokemons = new UdensP(pokemonaVards, ipasnieks, dziviba, uzbrukums, aizsardziba);
         }
         
-        visiPokemoni.add(p);
-        if(kamPiederIndex == 0) speletajs.pievienotPokemonu(p);
-        Metodes.info("Veiksmīgi izveidots: " + pVards);
+        visiPokemoni.add(jaunaisPokemons);
+        if(kamPiederIndex == 0) {
+            speletajs.pievienotPokemonu(jaunaisPokemons);
+            Metodes.info("Veiksmīgi izveidots un pievienots tavai komandai: " + pokemonaVards);
+        } else {
+            Metodes.info("Veiksmīgi izveidots savvaļas pokemons: " + pokemonaVards);
+        }
     }
 
-    // --- ATJAUNOTĀ KOMANDAS METODE AR ĀRSTĒŠANU ---
-    public static void paraditKomandu() {
+    // RĀDĪT MANU KOMANDU
+    public static void paraditManoKomandu() {
         if (speletajs.getKomanda().isEmpty()) { 
-            Metodes.info("Tava komanda ir tukša!"); 
+            Metodes.info("Tava komanda ir tukša! Izveido savus pirmos pokemonus."); 
             return; 
         }
 
-        // Izveidojam pielāgotu logu (JDialog)
         JDialog dialogs = new JDialog((Frame)null, true);
         dialogs.setUndecorated(true);
         dialogs.setBackground(new Color(0,0,0,0));
-        dialogs.setSize(500, 450);
+        dialogs.setSize(600, 500);
         dialogs.setLocationRelativeTo(null);
 
         JPanel panelis = new JPanel(new BorderLayout());
         panelis.setBackground(VizualaMetodes.GALVENAIS_FONS);
         panelis.setBorder(BorderFactory.createLineBorder(VizualaMetodes.AKCENTS, 2));
         
-        // Virsraksts
-        JLabel virsraksts = new JLabel("TAVA KOMANDA", SwingConstants.CENTER);
+        // VIRSRKSTS
+        JLabel virsraksts = new JLabel("MANA POKEMONU KOMANDA - Treneris: " + speletajs.getVards(), SwingConstants.CENTER);
         virsraksts.setFont(VizualaMetodes.FONTS_VIRSRKSTS);
         virsraksts.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
-        virsraksts.setBorder(new EmptyBorder(15,0,15,0));
+        virsraksts.setBorder(new EmptyBorder(20,0,20,0));
         panelis.add(virsraksts, BorderLayout.NORTH);
 
-        // Teksta lauks ar informāciju
+        // TEKSTA LAUKS AR POKEMONU INFORMĀCIJU
         JTextArea tekstaLauks = new JTextArea();
         tekstaLauks.setEditable(false);
         tekstaLauks.setBackground(VizualaMetodes.PANELA_FONS);
         tekstaLauks.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
-        tekstaLauks.setFont(VizualaMetodes.FONTS_TEKSTS);
-        tekstaLauks.setMargin(new Insets(10,10,10,10));
+        tekstaLauks.setFont(new Font("Consolas", Font.PLAIN, 14));
+        tekstaLauks.setMargin(new Insets(15,15,15,15));
         
-        // Funkcija, kas atjauno tekstu
+        // ATJAUNOT TEKSTU
         Runnable atjaunotTekstu = () -> {
-            StringBuilder sb = new StringBuilder();
+            String info = "";
+            int numurs = 1;
             for (Pokemons p : speletajs.getKomanda()) {
-                sb.append(p.toString()).append("\n\n");
+                info += numurs + ". " + p.toString() + "\n\n";
+                numurs++;
             }
-            tekstaLauks.setText(sb.toString());
-            tekstaLauks.setCaretPosition(0); // Uz augšu
+            tekstaLauks.setText(info);
+            tekstaLauks.setCaretPosition(0);
         };
-        atjaunotTekstu.run(); // Pirmā ielāde
+        atjaunotTekstu.run();
 
         JScrollPane scroll = new JScrollPane(tekstaLauks);
-        scroll.setBorder(new EmptyBorder(10, 20, 10, 20));
+        scroll.setBorder(new EmptyBorder(15, 25, 15, 25));
         scroll.getViewport().setBackground(VizualaMetodes.PANELA_FONS);
-        // Noņemam scrollbar rāmjus
         scroll.setBorder(null);
         panelis.add(scroll, BorderLayout.CENTER);
 
-        // Apakšas pogas (Aizvērt un Dziedēt)
-        JPanel poguPanelis = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
+        // APAKŠĒJAIS PANELIS AR POGA
+        JPanel poguPanelis = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 20));
         poguPanelis.setOpaque(false);
 
-        JButton dziedetPoga = VizualaMetodes.izveidotStiliguPogu("Dziedēt Visus", e -> {
+        JButton dziedetPoga = VizualaMetodes.izveidotStiliguPogu("Dziedēt Visus Pokemonus", e -> {
             for (Pokemons p : speletajs.getKomanda()) {
-                // Tā kā nav tiešas setDziviba metodes un dziedet() tikai daļēji dziedē,
-                // mēs izsaucam dziedet() ciklā, kamēr dzīvība ir pilna.
                 while(p.getDziviba() < p.getMaxDziviba()) {
                     p.dziedet();
                 }
             }
             atjaunotTekstu.run();
-            JOptionPane.showMessageDialog(dialogs, "Visi pokemoni ir pilnībā izārstēti!");
+            JOptionPane.showMessageDialog(dialogs, "Visi pokemoni komandā ir pilnībā izārstēti un atguvuši spēkus!");
         });
-        // Padarām dziedēšanas pogu zaļu (kā ārstēšanu)
         dziedetPoga.setBackground(new Color(46, 204, 113));
 
         JButton aizvertPoga = VizualaMetodes.izveidotStiliguPogu("Aizvērt", e -> dialogs.dispose());
@@ -253,62 +273,206 @@ public class Pokedatnis extends JFrame {
         dialogs.setVisible(true);
     }
 
-    public static void paraditVisus() {
-        if (visiPokemoni.isEmpty()) { Metodes.info("Nav reģistrētu pokemonu."); return; }
-        StringBuilder sb = new StringBuilder("VISI POKEMONI:\n");
-        for (Pokemons p : visiPokemoni) sb.append(p).append("\n");
-        Metodes.info(sb.toString());
-    }
-
-    public static void organizetCinu() {
-        if (speletajs.getKomandasIzmers() == 0) { Metodes.info("Tev nav pokemonu cīņai!"); return; }
-        
-        Pokemons mans = speletajs.getKomanda().get(0); 
-        
-        Pokemons ienaidnieks = null;
-        for(Pokemons p : visiPokemoni) {
-            if(!p.getTreneris().equals(speletajs.getVards())) { ienaidnieks = p; break; }
+    // RĀDĪT VISUS POKEMONUS
+    public static void paraditVisusPokemonus() {
+        if (visiPokemoni.isEmpty()) { 
+            Metodes.info("Datubāzē vēl nav reģistrētu pokemonu."); 
+            return; 
         }
         
-        if(ienaidnieks == null) { Metodes.info("Nav pretinieku!\nIzveido 'Savvaļas' pokemonu."); return; }
+        JDialog dialogs = new JDialog((Frame)null, true);
+        dialogs.setUndecorated(true);
+        dialogs.setBackground(new Color(0,0,0,0));
+        dialogs.setSize(700, 600);
+        dialogs.setLocationRelativeTo(null);
+
+        JPanel panelis = new JPanel(new BorderLayout());
+        panelis.setBackground(VizualaMetodes.GALVENAIS_FONS);
+        panelis.setBorder(BorderFactory.createLineBorder(VizualaMetodes.AKCENTS, 2));
         
-        kaujasProcess(mans, ienaidnieks);
+        JLabel virsraksts = new JLabel("VISI POKEMONI POKEDATNĪ - Kopā: " + visiPokemoni.size(), SwingConstants.CENTER);
+        virsraksts.setFont(VizualaMetodes.FONTS_VIRSRKSTS);
+        virsraksts.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
+        virsraksts.setBorder(new EmptyBorder(20,0,20,0));
+        panelis.add(virsraksts, BorderLayout.NORTH);
+
+        JTextArea tekstaLauks = new JTextArea();
+        tekstaLauks.setEditable(false);
+        tekstaLauks.setBackground(VizualaMetodes.PANELA_FONS);
+        tekstaLauks.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
+        tekstaLauks.setFont(new Font("Consolas", Font.PLAIN, 13));
+        tekstaLauks.setMargin(new Insets(15,15,15,15));
+        
+        String visiPokemoniInfo = "";
+        int numurs = 1;
+        for (Pokemons p : visiPokemoni) {
+            visiPokemoniInfo += numurs + ". " + p.toString() + "\n\n";
+            numurs++;
+        }
+        tekstaLauks.setText(visiPokemoniInfo);
+        tekstaLauks.setCaretPosition(0);
+
+        JScrollPane scroll = new JScrollPane(tekstaLauks);
+        scroll.setBorder(new EmptyBorder(15, 25, 15, 25));
+        scroll.getViewport().setBackground(VizualaMetodes.PANELA_FONS);
+        panelis.add(scroll, BorderLayout.CENTER);
+
+        JButton aizvertPoga = VizualaMetodes.izveidotStiliguPogu("Aizvērt", e -> dialogs.dispose());
+        JPanel poguPanelis = new JPanel();
+        poguPanelis.setOpaque(false);
+        poguPanelis.add(aizvertPoga);
+        poguPanelis.setBorder(new EmptyBorder(0, 0, 20, 0));
+        panelis.add(poguPanelis, BorderLayout.SOUTH);
+
+        VizualaMetodes.padaritParietojamu(panelis, dialogs);
+        dialogs.add(panelis);
+        dialogs.setVisible(true);
     }
 
-    public static void kaujasProcess(Pokemons p1, Pokemons p2) {
-        while (p1.getDziviba() > 0 && p2.getDziviba() > 0) {
-            String statuss = String.format("TAVS: %s (%d HP) vs PRETINIEKS: %s (%d HP)", 
-                    p1.getVards(), p1.getDziviba(), p2.getVards(), p2.getDziviba());
+    // SĀKT CĪŅU
+    public static void saktiesCinu() {
+        if (speletajs.getKomandasIzmers() == 0) { 
+            Metodes.info("Tev nav pokemonu cīņai! Vispirms izveido savu komandu."); 
+            return; 
+        }
+        
+        // IZVĒLĒTIES SAVU POKEMONU
+        ArrayList<Pokemons> manaKomanda = speletajs.getKomanda();
+        String[] manaKomandaVardi = new String[manaKomanda.size()];
+        for (int i = 0; i < manaKomanda.size(); i++) {
+            manaKomandaVardi[i] = manaKomanda.get(i).getVards() + " (HP: " + 
+                                 manaKomanda.get(i).getDziviba() + "/" + 
+                                 manaKomanda.get(i).getMaxDziviba() + ")";
+        }
+        
+        int manaIzvele = Metodes.raditIzveli("Izvēlies savu cīnītāju", "Kuru pokemonu sūtīsi cīņā?", manaKomandaVardi);
+        if (manaIzvele == -1) return;
+        
+        Pokemons mansPokemons = manaKomanda.get(manaIzvele);
+        
+        // IZVĒLĒTIES PRETINIEKU
+        ArrayList<Pokemons> pieejamiePretinieki = new ArrayList<>();
+        for (Pokemons p : visiPokemoni) {
+            if (!p.getTreneris().equals(speletajs.getVards()) && p.getDziviba() > 0) {
+                pieejamiePretinieki.add(p);
+            }
+        }
+        
+        if (pieejamiePretinieki.isEmpty()) {
+            Metodes.info("Šobrīd nav pieejamu pretinieku! Izveido savvaļas pokemonus vai pagaidi turnīru.");
+            return;
+        }
+        
+        String[] pretiniekuVardi = new String[pieejamiePretinieki.size()];
+        for (int i = 0; i < pieejamiePretinieki.size(); i++) {
+            pretiniekuVardi[i] = pieejamiePretinieki.get(i).getVards() + " - " + 
+                                pieejamiePretinieki.get(i).getTipaNosaukums() + " (HP: " + 
+                                pieejamiePretinieki.get(i).getDziviba() + ")";
+        }
+        
+        int pretiniekaIzvele = Metodes.raditIzveli("Izvēlies pretinieku", "Pretinieks cīņai:", pretiniekuVardi);
+        if (pretiniekaIzvele == -1) return;
+        
+        Pokemons pretinieks = pieejamiePretinieki.get(pretiniekaIzvele);
+        
+        // SĀKT CĪŅU
+        kaujasProcess(mansPokemons, pretinieks);
+    }
+
+    // KAUJAS PROCESS
+    public static void kaujasProcess(Pokemons mansPokemons, Pokemons pretinieks) {
+        int raunds = 1;
+        
+        while (mansPokemons.getDziviba() > 0 && pretinieks.getDziviba() > 0) {
+            String statuss = String.format("=== RAUNDS %d ===\nTAVS: %s (%d/%d HP)\nPRETINIEKS: %s (%d/%d HP)", 
+                    raunds, mansPokemons.getVards(), mansPokemons.getDziviba(), mansPokemons.getMaxDziviba(),
+                    pretinieks.getVards(), pretinieks.getDziviba(), pretinieks.getMaxDziviba());
             
-            String[] darbibas = {"Uzbrukt", "Dziedēt", "Speciālā spēja", "Bēgt"};
-            int gijiens = Metodes.raditIzveli("Cīņa", statuss, darbibas);
+            String[] darbibas = {"Uzbrukt", "Dziedēt", "Speciālā Spēja", "Bēgt no Cīņas"};
+            int gajiens = Metodes.raditIzveli("Cīņas Raunds " + raunds, statuss, darbibas);
             
-            if(gijiens == -1 || gijiens == 3) {
-                Metodes.info("Tu aizbēgi no cīņas!");
+            if(gajiens == -1 || gajiens == 3) {
+                Metodes.info("Tu aizbēgi no cīņas! " + pretinieks.getVards() + " uzvarēja.");
                 break;
             }
             
             String mansGajiens = "";
-            if(gijiens == 0) mansGajiens = p1.uzbrukt(p2);
-            else if(gijiens == 1) mansGajiens = p1.dziedet();
-            else {
-                if (p1 instanceof ElektriskaisP) mansGajiens = ((ElektriskaisP)p1).uzladet();
-                else if (p1 instanceof UdensP) mansGajiens = ((UdensP)p1).nirt();
-                else mansGajiens = p1.getVards() + " nav speciālo spēju!";
+            if(gajiens == 0) {
+                mansGajiens = mansPokemons.uzbrukt(pretinieks);
+            } else if(gajiens == 1) {
+                mansGajiens = mansPokemons.dziedet();
+            } else {
+                // SPECIĀLĀ SPĒJA
+                if (mansPokemons instanceof ElektriskaisP) {
+                    mansGajiens = ((ElektriskaisP)mansPokemons).uzladet();
+                } else if (mansPokemons instanceof UdensP) {
+                    mansGajiens = ((UdensP)mansPokemons).nirt();
+                } else {
+                    mansGajiens = mansPokemons.getVards() + " nav speciālo spēju! Automātisks uzbrukums.";
+                    mansGajiens = mansPokemons.uzbrukt(pretinieks);
+                }
             }
             
-            if(p2.getDziviba() <= 0) {
-                Metodes.info("UZVARA!\n" + mansGajiens + "\n\n" + p2.getVards() + " tika pieveikts!");
-                p1.attistit();
+            // PĀRBAUDĪT VAI PRETINIEKS IR ZAUDĒJIS
+            if(pretinieks.getDziviba() <= 0) {
+                Metodes.info("=== UZVARA! ===\n" + mansGajiens + "\n\n" + 
+                           pretinieks.getVards() + " tika pieveikts!\n\n" +
+                           mansPokemons.getVards() + " saņēma pieredzi un attīstījās!");
+                mansPokemons.attistit();
                 break;
             }
             
-            String pretiniekaGajiens = p2.uzbrukt(p1);
-            Metodes.info("RAUNDA REZULTĀTS:\n" + mansGajiens + "\n\nPRETINIEKA GĀJIENS:\n" + pretiniekaGajiens);
+            // PRETINIEKA GĀJIENS
+            String pretiniekaGajiens = pretinieks.uzbrukt(mansPokemons);
             
-            if (p1.getDziviba() <= 0) {
-                Metodes.info("ZAUDĒJUMS! Tavs pokemons zaudēja samaņu.");
+            // PĀRBAUDĪT VAI SPĒLĒTĀJS IR ZAUDĒJIS
+            if (mansPokemons.getDziviba() <= 0) {
+                Metodes.info("=== ZAUDĒJUMS! ===\n" + mansGajiens + "\n\nPRETINIEKA GĀJIENS:\n" + 
+                           pretiniekaGajiens + "\n\nTavs pokemons " + mansPokemons.getVards() + " zaudēja samaņu.");
+                break;
             }
+            
+            // RAUNDA REZULTĀTS
+            Metodes.info("=== RAUNDA " + raunds + " REZULTĀTS ===\n" + 
+                        "Tavs gājiens:\n" + mansGajiens + "\n\n" +
+                        "Pretinieka gājiens:\n" + pretiniekaGajiens + "\n\n" +
+                        "=== PĒC RAUNDA ===\n" +
+                        "Tavs pokemons: " + mansPokemons.getDziviba() + "/" + mansPokemons.getMaxDziviba() + " HP\n" +
+                        "Pretinieks: " + pretinieks.getDziviba() + "/" + pretinieks.getMaxDziviba() + " HP");
+            
+            raunds++;
         }
+    }
+
+    // ORGANIZĒT TURNĪRU
+    public static void organizetTurniru() {
+        Metodes.info("Turnīru sistēma tiks ieviesta nākamajā spēles atjauninājumā!\n\n" +
+                    "Plānotās funkcijas:\n" +
+                    "• 8 pokemonu turnīrs\n" +
+                    "• Olympiskā sistēma\n" +
+                    "• Balvas uzvarētājiem\n" +
+                    "• Reitingu sistēma");
+    }
+
+    // RĀDĪT NOTEIKUMUS
+    public static void paraditNoteikumus() {
+        String noteikumi = "=== POKEMONU CĪŅU NOTEIKUMI ===\n\n" +
+                          "1. KATRS POKEMONS IR SAVA TIPA\n" +
+                          "   • Parastais - vienkārši uzbrukumi\n" +
+                          "   • Elektriskais - augsta voltāža, spēcīgi uzbrukumi\n" +
+                          "   • Ūdens - var nirt, negaidīti uzbrukt\n\n" +
+                          "2. CĪŅAS MECHANIKA\n" +
+                          "   • Katrs pokemons ir HP, ATK, DEF\n" +
+                          "   • Aizsardzība samazina saņemto bojājumu\n" +
+                          "   • Speciālās spējas dod papildu priekšrocības\n\n" +
+                          "3. ATTĪSTĪBA\n" +
+                          "   • Uzvarot cīņās, pokemoni iegūst līmeni\n" +
+                          "   • Katrs līmenis palielina HP, ATK, DEF\n\n" +
+                          "4. STRATĒĢIJA\n" +
+                          "   • Izmanto dziedēšanu, kad HP zems\n" +
+                          "   • Speciālās spējas dod taktisko priekšrocību\n" +
+                          "   • Veido dažādu tipu komandu!";
+        
+        Metodes.info(noteikumi);
     }
 }
