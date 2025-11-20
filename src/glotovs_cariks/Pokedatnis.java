@@ -66,7 +66,7 @@ public class Pokedatnis extends JFrame {
         kreisaPuse.setLayout(new BorderLayout());
         kreisaPuse.setBorder(new EmptyBorder(20, 20, 20, 20));
         
-        JLabel attels = VizualaMetodes.ieladetFonu("pokemon_fons.png", 400, 400);
+        JLabel attels = VizualaMetodes.ieladetFonu("pokemons_fons.png", 400, 400);
         if (attels.getIcon() == null) {
             attels.setText("<html><center>Sveicināti Pokemonu Arēnā!<br><br>Trenera vārds: " + speletajs.getVards() + 
                           "<br>Pokemonu skaits: " + visiPokemoni.size() + 
@@ -85,25 +85,14 @@ public class Pokedatnis extends JFrame {
         // GALVENĀS POGA
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Izveidot Jaunu Pokemonu", e -> izveidotPokemonu()));
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Mana Pokemonu Komanda", e -> paraditManoKomandu()));
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Visi Pokemoni Datubāzē", e -> paraditVisusPokemonus()));
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Visu Pokemonu Saraksts", e -> paraditVisusPokemonus()));
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Sākt Cīņu", e -> saktiesCinu()));
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Organizēt Turnīru", e -> organizetTurniru()));
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Spēles Noteikumi", e -> paraditNoteikumus()));
 
         saturs.add(kreisaPuse);
         saturs.add(labaPuse);
         galvenaisPanelis.add(saturs, BorderLayout.CENTER);
 
-        // PANELIS APAKŠĀ - STATISTIKA
-        JPanel apaksa = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        apaksa.setOpaque(false);
-        JLabel statistika = new JLabel("Treneris: " + speletajs.getVards() + " | Komandā: " + 
-                                     speletajs.getKomandasIzmers() + " pokemoni | Kopā datubāzē: " + 
-                                     visiPokemoni.size() + " pokemoni");
-        statistika.setForeground(VizualaMetodes.TEKSTS_PELMONS);
-        statistika.setFont(VizualaMetodes.FONTS_TEKSTS);
-        apaksa.add(statistika);
-        galvenaisPanelis.add(apaksa, BorderLayout.SOUTH);
+
 
         // PĀRVIETOŠANAS FUNKCIJA
         VizualaMetodes.padaritParietojamu(galvenaisPanelis, this);
@@ -136,14 +125,7 @@ public class Pokedatnis extends JFrame {
         String vards = Metodes.ievaditTekstu("Sveiks, drosmīgais Pokemonu treneri! Ievadi savu vārdu:");
         
         if (vards != null && !vards.isEmpty()) {
-            speletajs = new Treneris(vards);
-            // PIEVIENO PĀRIS STARTER POKEMONUS
-            Pokemons starter1 = new ParastaisP("Pikachu", vards, 80, 25, 10);
-            Pokemons starter2 = new UdensP("Squirtle", vards, 90, 20, 15);
-            visiPokemoni.add(starter1);
-            visiPokemoni.add(starter2);
-            speletajs.pievienotPokemonu(starter1);
-            
+            speletajs = new Treneris(vards);            
             SwingUtilities.invokeLater(() -> new Pokedatnis());
         } else {
             System.exit(0);
@@ -159,7 +141,7 @@ public class Pokedatnis extends JFrame {
     
     // IZVEIDOT JAUNU POKEMONU
     public static void izveidotPokemonu() {
-        String[] ipasnieki = {"Man (Trenerim)", "Savvaļas Pokémon"};
+        String[] ipasnieki = {"Trenerim", "Savvaļas Pokemon"};
         int kamPiederIndex = Metodes.raditIzveli("Pokemona Īpašnieks", "Kam piederēs šis pokemons?", ipasnieki);
         if(kamPiederIndex == -1) return;
         
@@ -276,7 +258,7 @@ public class Pokedatnis extends JFrame {
     // RĀDĪT VISUS POKEMONUS
     public static void paraditVisusPokemonus() {
         if (visiPokemoni.isEmpty()) { 
-            Metodes.info("Datubāzē vēl nav reģistrētu pokemonu."); 
+            Metodes.info("Sarakstā vēl nav reģistrētu pokemonu."); 
             return; 
         }
         
@@ -384,7 +366,7 @@ public class Pokedatnis extends JFrame {
         int raunds = 1;
         
         while (mansPokemons.getDziviba() > 0 && pretinieks.getDziviba() > 0) {
-            String statuss = String.format("=== RAUNDS %d ===\nTAVS: %s (%d/%d HP)\nPRETINIEKS: %s (%d/%d HP)", 
+            String statuss = String.format("=== RAUNDS %d ===\n\nTAVS: %s (%d/%d HP)\nPRETINIEKS: %s (%d/%d HP)", 
                     raunds, mansPokemons.getVards(), mansPokemons.getDziviba(), mansPokemons.getMaxDziviba(),
                     pretinieks.getVards(), pretinieks.getDziviba(), pretinieks.getMaxDziviba());
             
@@ -442,37 +424,5 @@ public class Pokedatnis extends JFrame {
             
             raunds++;
         }
-    }
-
-    // ORGANIZĒT TURNĪRU
-    public static void organizetTurniru() {
-        Metodes.info("Turnīru sistēma tiks ieviesta nākamajā spēles atjauninājumā!\n\n" +
-                    "Plānotās funkcijas:\n" +
-                    "• 8 pokemonu turnīrs\n" +
-                    "• Olympiskā sistēma\n" +
-                    "• Balvas uzvarētājiem\n" +
-                    "• Reitingu sistēma");
-    }
-
-    // RĀDĪT NOTEIKUMUS
-    public static void paraditNoteikumus() {
-        String noteikumi = "=== POKEMONU CĪŅU NOTEIKUMI ===\n\n" +
-                          "1. KATRS POKEMONS IR SAVA TIPA\n" +
-                          "   • Parastais - vienkārši uzbrukumi\n" +
-                          "   • Elektriskais - augsta voltāža, spēcīgi uzbrukumi\n" +
-                          "   • Ūdens - var nirt, negaidīti uzbrukt\n\n" +
-                          "2. CĪŅAS MECHANIKA\n" +
-                          "   • Katrs pokemons ir HP, ATK, DEF\n" +
-                          "   • Aizsardzība samazina saņemto bojājumu\n" +
-                          "   • Speciālās spējas dod papildu priekšrocības\n\n" +
-                          "3. ATTĪSTĪBA\n" +
-                          "   • Uzvarot cīņās, pokemoni iegūst līmeni\n" +
-                          "   • Katrs līmenis palielina HP, ATK, DEF\n\n" +
-                          "4. STRATĒĢIJA\n" +
-                          "   • Izmanto dziedēšanu, kad HP zems\n" +
-                          "   • Speciālās spējas dod taktisko priekšrocību\n" +
-                          "   • Veido dažādu tipu komandu!";
-        
-        Metodes.info(noteikumi);
     }
 }
