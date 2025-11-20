@@ -1,9 +1,25 @@
 package glotovs_cariks;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.*;
+import java.util.Random;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 public class Pokedatnis extends JFrame { 
@@ -19,6 +35,13 @@ public class Pokedatnis extends JFrame {
     private static final int DEFAULT_DEF = 20;
     private static final int DEFAULT_VOLTAZA = 120;
 
+    private static final String[] NOKLUSEJUMA_VARDI = {
+            "Pikachu", "Bulbasaur", "Charmander", "Squirtle", "Jigglypuff", 
+            "Meowth", "Psyduck", "Snorlax", "Mewtwo", "Gengar", 
+            "Eevee", "Dragonite", "Magikarp", "Gyarados", "Lapras",
+            "Onix", "Alakazam", "Machamp", "Arcanine", "Vaporeon"
+        };
+    
     public Pokedatnis() {
         setTitle("Pokedatnis - Pokemonu Cīņu Sistēma"); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,7 +100,7 @@ public class Pokedatnis extends JFrame {
         labaPuse.setLayout(new GridLayout(6, 1, 0, 15)); 
 
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Izveidot Jaunu Pokemonu", e -> izveidotPokemonu()));
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Mana Pokemonu Komanda", e -> paraditManoKomandu()));
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Mana Pokemonu Komanda", e -> paraditManuKomandu()));
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Visu Pokemonu Saraksts", e -> paraditVisusPokemonus()));
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Sākt Cīņu", e -> saktiesCinu()));
 
@@ -137,11 +160,12 @@ public class Pokedatnis extends JFrame {
         int tipsIndex = Metodes.raditIzveli("Pokemona Tips", "Izvēlies pokemona tipu:", tipi);
         if (tipsIndex == -1) return;
         
-        String pokemonaVards = Metodes.ievaditTekstu("Ievadi pokemona vārdu (vai atstāj tukšu, lai izmantotu noklusējuma vārdu):");
+        String pokemonaVards = Metodes.ievaditTekstu("Ievadi pokemona vārdu:");
         if(pokemonaVards == null) return;
         
         if(pokemonaVards.trim().isEmpty()) {
-            pokemonaVards = "Default" + tipi[tipsIndex];
+            Random rand = new Random();
+            pokemonaVards = NOKLUSEJUMA_VARDI[rand.nextInt(NOKLUSEJUMA_VARDI.length)];
         }
         
         int dziviba = Metodes.ievaditSkaitliRobezas("Pokemona dzīvības punkti (HP):", 50, 250);
@@ -175,7 +199,7 @@ public class Pokedatnis extends JFrame {
         }
     }
 
-    public static void paraditManoKomandu() {
+    public static void paraditManuKomandu() {
         if (speletajs.getKomanda().isEmpty()) {
             Metodes.info("Tavā komandā nav neviena pokemona! Izveido jaunu!");
             return;
@@ -193,7 +217,7 @@ public class Pokedatnis extends JFrame {
 
     public static void paraditVisusPokemonus() {
         if (visiPokemoni.isEmpty()) {
-            Metodes.info("Pokedatnī nav neviena pokemona. Sāc spēli, izveidojot dažus!");
+            Metodes.info("Sarakstā nav neviena pokemona. Sāc spēli, izveidojot dažus!");
             return;
         }
         
@@ -204,7 +228,7 @@ public class Pokedatnis extends JFrame {
             numurs++;
         }
         
-        VizualaMetodes.raditDialogu("VISI POKEMONI POKEDATNĪ - Kopā: " + visiPokemoni.size(), visiPokemoniInfo);
+        VizualaMetodes.raditDialogu("VISI POKEMONI SARAKSTĀ - Kopā: " + visiPokemoni.size(), visiPokemoniInfo);
     }
     
     public static void saktiesCinu() {
@@ -229,7 +253,7 @@ public class Pokedatnis extends JFrame {
         }
         
         if (pretinieks == null) {
-            Metodes.info("Nav neviena 'Savvaļas' pokemona, ar ko cīnīties. Izveido jaunu 'Savvaļas' pokemonu!");
+            Metodes.info("Nav neviena 'Savvaļas' pokemona, ar ko cīnīties");
             return;
         }
         
