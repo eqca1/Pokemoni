@@ -1,16 +1,16 @@
 package glotovs_cariks;
 
-// ABSTRAKCIJA: Šī klase definē kopīgo struktūru visiem pokemoniem
-public abstract class Pokemons {
 
-    // INKAPSULĀCIJA: Visi atribūti ir private
-    private String vards;           
-    private String treneris;        
-    private int limenis;            
-    private int dziviba;            
-    private int maxDziviba;         
-    private int uzbrukumaSpeks;     
-    private int aizsardziba;        
+// ABSTRAKTAIS POKEMONU KLASES PAMATS
+public abstract class Pokemons {
+    // PAMATA PARAMETRI
+    private String vards;
+    private String treneris;
+    private int limenis;
+    private int dziviba;
+    private int maxDziviba;
+    private int uzbrukumaSpeks;
+    private int aizsardziba;
 
     public Pokemons(String vards, String treneris, int maxDziviba, int uzbrukumaSpeks, int aizsardziba) {
         this.vards = vards;
@@ -22,59 +22,74 @@ public abstract class Pokemons {
         this.limenis = 1;
     }
 
-    // ABSTRAKTA METODE: Katrs pokemona tips uzbrūk citādāk
-    // POLIMORFISMS: Šī metode tiks pārrakstīta apakšklasēs
+    // ABSTRAKTĀS METODES - KATRAM TIPAM SAVS ĪPAŠAIS UZBRUKUMS
     public abstract String uzbrukt(Pokemons pretinieks);
-    
-    // Metode tipa nosaukuma iegūšanai (teksta formātā)
     public abstract String getTipaNosaukums();
 
-    // Metode bojājumu saņemšanai (Aizsardzība darbojas kā procenti)
+    // BOJĀJUMU SAŅEMŠANA AR AIZSARDZĪBAS APRĒĶINU
     public void sanemtBojajumus(int bojajumi) {
-        int blokets = (bojajumi * this.aizsardziba) / 100;
-        int realiBojajumi = bojajumi - blokets;
+        int aizsardzibasSamazinas = (bojajumi * this.aizsardziba) / 100;
+        int realieBojajumi = bojajumi - aizsardzibasSamazinas;
 
-        if (realiBojajumi < 1) realiBojajumi = 1; 
+        if (realieBojajumi < 1) realieBojajumi = 1;
 
-        this.dziviba -= realiBojajumi;
+        this.dziviba -= realieBojajumi;
         if (this.dziviba < 0) this.dziviba = 0;
     }
 
-    // Metode dzīvības atjaunošanai
+    // DZIEDĒŠANAS METODE
     public String dziedet() {
-        if (this.dziviba >= this.maxDziviba) return vards + " ir pilnībā vesels!";
+        if (this.dziviba >= this.maxDziviba) {
+            return vards + " ir pilnībā vesels!";
+        }
         
         int atjaunosana = 25 + (limenis * 5);
         this.dziviba += atjaunosana;
         
-        if (this.dziviba > this.maxDziviba) this.dziviba = this.maxDziviba;
+        if (this.dziviba > this.maxDziviba) {
+            this.dziviba = this.maxDziviba;
+        }
         
         return vards + " atguva spēkus. Dzīvība: " + dziviba + "/" + maxDziviba;
     }
 
-    // Līmeņa paaugstināšana
+    // ATTĪSTĪBAS METODE
     public void attistit() {
         this.limenis++;
-        this.maxDziviba += 15;
-        this.uzbrukumaSpeks += 5;
-        this.aizsardziba += 2; 
+        this.maxDziviba += 20;
+        this.uzbrukumaSpeks += 8;
+        this.aizsardziba += 3;
         
-        if (this.aizsardziba > 90) this.aizsardziba = 90;
+        if (this.aizsardziba > 80) {
+            this.aizsardziba = 80;
+        }
         
-        this.dziviba = this.maxDziviba; 
+        this.dziviba = this.maxDziviba; // Pilnīga dziedēšana pēc attīstības
     }
 
-    // Getteri
+    // GETTERU METODES
     public String getVards() { return vards; }
     public int getDziviba() { return dziviba; }
     public int getMaxDziviba() { return maxDziviba; }
     public int getUzbrukumaSpeks() { return uzbrukumaSpeks; }
     public String getTreneris() { return treneris; }
     public int getLimenis() { return limenis; }
+    public int getAizsardziba() { return aizsardziba; }
+
+    // SETTERS DZĪVĪBAI (DZIEDĒŠANAI)
+    public void setDziviba(int jaunaDziviba) {
+        this.dziviba = jaunaDziviba;
+        if (this.dziviba > this.maxDziviba) {
+            this.dziviba = this.maxDziviba;
+        }
+        if (this.dziviba < 0) {
+            this.dziviba = 0;
+        }
+    }
 
     @Override
     public String toString() {
-        return String.format("[%s] %s (Līm. %d) | HP: %d/%d | ATK: %d | DEF: %d%% | Treneris: %s", 
+        return String.format("[%s] %s (Līmenis %d) | HP: %d/%d | ATK: %d | DEF: %d%% | Treneris: %s", 
                 getTipaNosaukums(), vards, limenis, dziviba, maxDziviba, uzbrukumaSpeks, aizsardziba, treneris);
     }
 }
