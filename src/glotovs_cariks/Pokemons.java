@@ -1,7 +1,6 @@
 package glotovs_cariks;
 
 
-// ABSTRAKTAIS POKEMONU KLASES PAMATS
 public abstract class Pokemons {
 
 	private String vards;
@@ -22,7 +21,6 @@ public abstract class Pokemons {
         this.limenis = 1;
     }
 
-    // abstraktas metodes
     public abstract String uzbrukt(Pokemons pretinieks);
     public abstract String getTipaNosaukums();
 
@@ -33,7 +31,9 @@ public abstract class Pokemons {
         if (realieBojajumi < 1) realieBojajumi = 1;
 
         this.dziviba -= realieBojajumi;
-        if (this.dziviba < 0) this.dziviba = 0;
+        if (this.dziviba < 0) {
+            this.dziviba = 0;
+        }
     }
 
     public String dziedet() {
@@ -43,7 +43,7 @@ public abstract class Pokemons {
         
         int atjaunosana = 25 + (limenis * 5);
         this.dziviba += atjaunosana;
-        
+
         if (this.dziviba > this.maxDziviba) {
             this.dziviba = this.maxDziviba;
         }
@@ -61,7 +61,7 @@ public abstract class Pokemons {
             this.aizsardziba = 80;
         }
         
-        this.dziviba = this.maxDziviba; // Pilnīga dziedēšana pēc attīstības
+        this.dziviba = this.maxDziviba;
     }
 
     public String getVards() { return vards; }
@@ -72,20 +72,13 @@ public abstract class Pokemons {
     public int getLimenis() { return limenis; }
     public int getAizsardziba() { return aizsardziba; }
 
-    // set metode dzīvībai (dziedēšanai)
     public void setDziviba(int jaunaDziviba) {
         this.dziviba = jaunaDziviba;
-        if (this.dziviba > this.maxDziviba) {
-            this.dziviba = this.maxDziviba;
-        }
-        if (this.dziviba < 0) {
-            this.dziviba = 0;
-        }
     }
-
+    
     @Override
     public String toString() {
-        return String.format("[%s] %s (Līmenis %d) | HP: %d/%d | ATK: %d | DEF: %d%% | Treneris: %s", 
-                getTipaNosaukums(), vards, limenis, dziviba, maxDziviba, uzbrukumaSpeks, aizsardziba, treneris);
+        return String.format("%s (Tips: %s, Līmenis: %d)\nTreneris: %s | HP: %d/%d | ATK: %d | DEF: %d%%",
+            vards, getTipaNosaukums(), limenis, treneris, dziviba, maxDziviba, uzbrukumaSpeks, aizsardziba);
     }
 }

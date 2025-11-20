@@ -2,7 +2,6 @@ package glotovs_cariks;
 
 import java.util.Random;
 
-// ŪDENS POKEMONS - AIZSARDZĪBAS TIPS
 public class UdensP extends Pokemons {
     private boolean zemUdens;
     private int izvairisanasIespeja;
@@ -22,14 +21,13 @@ public class UdensP extends Pokemons {
     public String uzbrukt(Pokemons pretinieks) {
         Random rand = new Random();
         int pamatBojajums = this.getUzbrukumaSpeks();
-        int izlasesBojajums = rand.nextInt(8); // 0-7 papildus bojājums
+        int izlasesBojajums = rand.nextInt(8);
         
         int kopejaisBojajums = pamatBojajums + izlasesBojajums;
         
-        // Ja pokemons ir zem ūdens, bojājums palielinās
         if (this.zemUdens) {
             kopejaisBojajums += 15;
-            this.zemUdens = false; // Iznirst pēc uzbrukuma
+            this.zemUdens = false;
             pretinieks.sanemtBojajumus(kopejaisBojajums);
             return this.getVards() + " IZNIRST UN NEGAIDĪTI UZBRŪK! Kritiski bojājumi: " + kopejaisBojajums + " HP";
         }
@@ -38,48 +36,41 @@ public class UdensP extends Pokemons {
         return this.getVards() + " izmanto ŪDENS STRŪKLA uzbrukumu! Bojājumi: " + kopejaisBojajums + " HP";
     }
 
-    @Override
     public void sanemtBojajumus(int bojajumi) {
         Random rand = new Random();
-        
-        // Pārbauda izvairīšanos
         if (rand.nextInt(100) < this.izvairisanasIespeja) {
-            // Izvairījās no bojājuma
-            return;
+            if (this.zemUdens) {
+                if (rand.nextInt(100) < (this.izvairisanasIespeja + 15)) {
+                    return;
+                }
+            } else {
+                return;
+            }
         }
         
-        // Ūdens pokemoni saņem mazāk bojājumu no elektriskajiem uzbrukumiem
-        int realieBojajumi = bojajumi;
+        if (this.zemUdens) {
+            bojajumi = (int) (bojajumi * 0.75);
+        }
         
-        super.sanemtBojajumus(realieBojajumi);
+        super.sanemtBojajumus(bojajumi);
     }
-
-    // SPECIĀLĀ SPĒJA - NIRŠANA
-    public String nirt() {
+    
+    public String nirtZemUdens() {
         this.zemUdens = true;
-        this.izvairisanasIespeja += 15; // Niršana palielina izvairīšanās iespēju
-        
-        if (this.izvairisanasIespeja > 50) {
-            this.izvairisanasIespeja = 50; // Maksimālā izvairīšanās
-        }
-        
-        return this.getVards() + " ienirst ūdenī! Izvairīšanās iespēja palielināta līdz " + izvairisanasIespeja + "%";
+        return this.getVards() + " ienirst zem ūdens! Nākamais uzbrukums būs spēcīgāks!";
     }
 
-    // SPECIĀLĀ SPĒJA - ŪDENS AIZSARDZĪBA
     public String udensAizsardziba() {
-        // Pagaidām palielina aizsardzību
         return this.getVards() + " izveido ūdens aizsardzības lauku! Aizsardzība palielināta!";
     }
 
     @Override
     public String dziedet() {
-        // Ūdens pokemoni dziedē efektīvāk
         if (this.getDziviba() >= this.getMaxDziviba()) {
             return getVards() + " ir pilnībā vesels!";
         }
         
-        int atjaunosana = 35 + (getLimenis() * 8); // Vairāk dziedēšanas nekā parastajiem
+        int atjaunosana = 35 + (getLimenis() * 8);
         this.setDziviba(this.getDziviba() + atjaunosana);
         
         if (this.getDziviba() > this.getMaxDziviba()) {
@@ -92,17 +83,14 @@ public class UdensP extends Pokemons {
     @Override
     public void attistit() {
         super.attistit();
-        this.izvairisanasIespeja += 5; // Katrs līmenis palielina izvairīšanās iespēju
-        if (this.izvairisanasIespeja > 60) this.izvairisanasIespeja = 60;
+        this.izvairisanasIespeja += 5;
+        if (this.izvairisanasIespeja > 45) {
+            this.izvairisanasIespeja = 45;
+        }
     }
-
+    
     @Override
     public String toString() {
-        String niršanasStatuss = zemUdens ? " (ZEM ŪDENS)" : "";
-        return super.toString() + " | Izvairīšanās: " + izvairisanasIespeja + "%" + niršanasStatuss;
+        return super.toString() + String.format(" | Izvairīšanās: %d%%", izvairisanasIespeja);
     }
-
-    // GETTERI
-    public boolean isZemUdens() { return zemUdens; }
-    public int getIzvairisanasIespeja() { return izvairisanasIespeja; }
 }
