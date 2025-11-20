@@ -3,8 +3,8 @@ package glotovs_cariks;
 
 // ABSTRAKTAIS POKEMONU KLASES PAMATS
 public abstract class Pokemons {
-    // PAMATA PARAMETRI
-    private String vards;
+
+	private String vards;
     private String treneris;
     private int limenis;
     private int dziviba;
@@ -22,11 +22,10 @@ public abstract class Pokemons {
         this.limenis = 1;
     }
 
-    // ABSTRAKTĀS METODES - KATRAM TIPAM SAVS ĪPAŠAIS UZBRUKUMS
+    // abstraktas metodes
     public abstract String uzbrukt(Pokemons pretinieks);
     public abstract String getTipaNosaukums();
 
-    // BOJĀJUMU SAŅEMŠANA AR AIZSARDZĪBAS APRĒĶINU
     public void sanemtBojajumus(int bojajumi) {
         int aizsardzibasSamazinas = (bojajumi * this.aizsardziba) / 100;
         int realieBojajumi = bojajumi - aizsardzibasSamazinas;
@@ -37,7 +36,6 @@ public abstract class Pokemons {
         if (this.dziviba < 0) this.dziviba = 0;
     }
 
-    // DZIEDĒŠANAS METODE
     public String dziedet() {
         if (this.dziviba >= this.maxDziviba) {
             return vards + " ir pilnībā vesels!";
@@ -53,7 +51,6 @@ public abstract class Pokemons {
         return vards + " atguva spēkus. Dzīvība: " + dziviba + "/" + maxDziviba;
     }
 
-    // ATTĪSTĪBAS METODE
     public void attistit() {
         this.limenis++;
         this.maxDziviba += 20;
@@ -67,7 +64,6 @@ public abstract class Pokemons {
         this.dziviba = this.maxDziviba; // Pilnīga dziedēšana pēc attīstības
     }
 
-    // GETTERU METODES
     public String getVards() { return vards; }
     public int getDziviba() { return dziviba; }
     public int getMaxDziviba() { return maxDziviba; }
@@ -76,7 +72,7 @@ public abstract class Pokemons {
     public int getLimenis() { return limenis; }
     public int getAizsardziba() { return aizsardziba; }
 
-    // SETTERS DZĪVĪBAI (DZIEDĒŠANAI)
+    // set metode dzīvībai (dziedēšanai)
     public void setDziviba(int jaunaDziviba) {
         this.dziviba = jaunaDziviba;
         if (this.dziviba > this.maxDziviba) {
