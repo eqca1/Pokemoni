@@ -15,6 +15,19 @@ public class Pokedatnis extends JFrame {
     private JPanel galvenaisPanelis;
     private float caurspidigums = 0.0f;
     
+    // --- JAUNS: GIF KOMPONENTES ---
+    private JLabel gifLabel; // Lai mēs varētu piekļūt labelim vēlāk
+    
+    // Ievietojiet šeit savu gif failu nosaukumus, kas atrodas src mapē vai resources
+    private static final String[] GIF_MASIVS = {
+        "1.gif",
+        "2.gif",
+        "3.gif",
+        "4.gif",
+        "5.gif",
+        "6.gif"
+    };
+
     private static final int DEFAULT_HP = 150;
     private static final int DEFAULT_ATK = 35;
     private static final int DEFAULT_DEF = 20;
@@ -72,22 +85,44 @@ public class Pokedatnis extends JFrame {
         kreisaPuse.setLayout(new BorderLayout());
         kreisaPuse.setBorder(new EmptyBorder(20, 20, 20, 20));
         
-        JLabel attels = new JLabel("VIETA GIF/ANIMĀCIJAI (400x400)", SwingConstants.CENTER); 
-        attels.setFont(VizualaMetodes.FONTS_VIRSRKSTS);
-        attels.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
-        attels.setPreferredSize(new Dimension(400, 400));
+        // Inicializējam GIF Labeli
+        gifLabel = new JLabel("Ielādē GIF...", SwingConstants.CENTER);
+        gifLabel.setFont(VizualaMetodes.FONTS_VIRSRKSTS);
+        gifLabel.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
+        gifLabel.setPreferredSize(new Dimension(400, 400));
         
-        kreisaPuse.add(attels, BorderLayout.CENTER);
+        // Pirmā ielāde
+        atjaunotGif();
+        
+        kreisaPuse.add(gifLabel, BorderLayout.CENTER);
 
         
         JPanel labaPuse = new JPanel();
         labaPuse.setOpaque(false);
         labaPuse.setLayout(new GridLayout(6, 1, 0, 15)); 
 
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Izveidot Jaunu Pokemonu", e -> izveidotPokemonu()));
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Mana Pokemonu Komanda", e -> paraditManoKomandu()));
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Visu Pokemonu Saraksts", e -> paraditVisusPokemonus()));
-        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Sākt Cīņu", e -> saktiesCinu()));
+        // --- POGAS AR GIF ATJAUNINĀŠANU ---
+        // Katra poga tagad veic darbību UN tad atjauno GIFu
+        
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Izveidot Jaunu Pokemonu", e -> {
+            izveidotPokemonu();
+            atjaunotGif();
+        }));
+        
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Mana Pokemonu Komanda", e -> {
+            paraditManoKomandu();
+            atjaunotGif();
+        }));
+        
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Visu Pokemonu Saraksts", e -> {
+            paraditVisusPokemonus();
+            atjaunotGif();
+        }));
+        
+        labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Sākt Cīņu", e -> {
+            saktiesCinu();
+            atjaunotGif();
+        }));
 
         saturs.add(kreisaPuse);
         saturs.add(labaPuse);
@@ -97,6 +132,13 @@ public class Pokedatnis extends JFrame {
         
         setVisible(true);
         animacijaParadities();
+    }
+
+    // --- METODE GIF ATJAUNINĀŠANAI ---
+    private void atjaunotGif() {
+        Random rand = new Random();
+        String nejaussGif = GIF_MASIVS[rand.nextInt(GIF_MASIVS.length)];
+        VizualaMetodes.ieladetGif(gifLabel, nejaussGif);
     }
 
     private void animacijaParadities() {
