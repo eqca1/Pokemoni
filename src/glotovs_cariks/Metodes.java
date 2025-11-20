@@ -3,6 +3,7 @@ package glotovs_cariks;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -43,11 +44,12 @@ public class Metodes {
     }
 
     public static void info(String zinja) {
-        JDialog d = izveidotBazesDialogu(400, 250);
+        // УВЕЛИЧЕНО: Было 400, 250 -> Стало 600, 450
+        JDialog d = izveidotBazesDialogu(600, 450);
         
         JPanel fons = izveidotDialogaFonu(10);
         
-        JLabel teksts = new JLabel("<html><div style='text-align: center;'>" + zinja.replace("\n", "<br>") + "</div></html>", SwingConstants.CENTER);
+        JLabel teksts = new JLabel("<html><div style='text-align: center; width: 450px;'>" + zinja.replace("\n", "<br>") + "</div></html>", SwingConstants.CENTER);
         teksts.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
         teksts.setFont(VizualaMetodes.FONTS_TEKSTS);
         teksts.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -67,7 +69,8 @@ public class Metodes {
     }
 
     public static String ievaditTekstu(String jautajums) {
-        JDialog d = izveidotBazesDialogu(450, 250);
+        // УВЕЛИЧЕНО: Было 450, 250 -> Стало 500, 300
+        JDialog d = izveidotBazesDialogu(500, 300);
         AtomicReference<String> teksts = new AtomicReference<>();
         
         JPanel fons = izveidotDialogaFonu(10);
@@ -117,7 +120,7 @@ public class Metodes {
     }
 
     public static int ievaditSkaitliRobezas(String jautajums, int min, int max) {
-        JDialog d = izveidotBazesDialogu(450, 250);
+        JDialog d = izveidotBazesDialogu(500, 300);
         AtomicInteger skaitlis = new AtomicInteger(-1);
         
         JPanel fons = izveidotDialogaFonu(10);
@@ -177,7 +180,8 @@ public class Metodes {
     }
 
     public static int raditIzveli(String virsraksts, String jautajums, String[] opcijas) {
-        JDialog d = izveidotBazesDialogu(500, 350);
+        // УВЕЛИЧЕНО: Было 500, 350 -> Стало 600, 450
+        JDialog d = izveidotBazesDialogu(600, 450);
         AtomicInteger izvele = new AtomicInteger(-1);
 
         JPanel fons = izveidotDialogaFonu(10);
@@ -220,5 +224,79 @@ public class Metodes {
         d.setVisible(true);
         
         return izvele.get();
+    }
+
+    public static Pokemons izveletiesPokemonuCinai(String virsraksts, List<Pokemons> saraksts) {
+        // УВЕЛИЧЕНО: Было 600, 500 -> Стало 600, 600
+        JDialog d = izveidotBazesDialogu(600, 600);
+        AtomicReference<Pokemons> izveletais = new AtomicReference<>(null);
+
+        JPanel fons = izveidotDialogaFonu(10);
+        fons.setLayout(new BorderLayout(10, 10));
+
+        JLabel lbl = new JLabel("<html><center>" + virsraksts + "</center></html>", SwingConstants.CENTER);
+        lbl.setFont(VizualaMetodes.FONTS_VIRSRKSTS);
+        lbl.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
+        lbl.setBorder(new EmptyBorder(15, 20, 10, 20));
+
+        JPanel sarakstaPanelis = new JPanel();
+        sarakstaPanelis.setLayout(new BoxLayout(sarakstaPanelis, BoxLayout.Y_AXIS));
+        sarakstaPanelis.setOpaque(false);
+
+        for (Pokemons p : saraksts) {
+            JPanel pPanelis = new JPanel(new BorderLayout());
+            pPanelis.setOpaque(false);
+            pPanelis.setBorder(BorderFactory.createCompoundBorder(
+                new EmptyBorder(5, 10, 5, 10),
+                BorderFactory.createMatteBorder(0, 0, 1, 0, VizualaMetodes.AKCENTS)
+            ));
+            pPanelis.setMaximumSize(new Dimension(550, 80));
+
+            JLabel infoLbl = new JLabel("<html><b>" + p.getVards() + "</b> (" + p.getTipaNosaukums() + ")<br>" +
+                    "HP: " + p.getDziviba() + "/" + p.getMaxDziviba() + "</html>");
+            infoLbl.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
+            infoLbl.setFont(VizualaMetodes.FONTS_TEKSTS);
+
+            JPanel poguGrupa = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            poguGrupa.setOpaque(false);
+
+            JButton izveletiesBtn = VizualaMetodes.izveidotStiliguPogu("Izvēlēties", e -> {
+                izveletais.set(p);
+                d.dispose();
+            });
+            izveletiesBtn.setPreferredSize(new Dimension(120, 40));
+
+            JButton dziedetBtn = VizualaMetodes.izveidotStiliguPogu("Dziedēt", VizualaMetodes.ZALS_IESPEJAMS, e -> {
+                p.dziedet();
+                infoLbl.setText("<html><b>" + p.getVards() + "</b> (" + p.getTipaNosaukums() + ")<br>" +
+                        "HP: " + p.getDziviba() + "/" + p.getMaxDziviba() + "</html>");
+                infoLbl.repaint();
+            });
+            dziedetBtn.setPreferredSize(new Dimension(100, 40));
+
+            poguGrupa.add(izveletiesBtn);
+            poguGrupa.add(dziedetBtn);
+
+            pPanelis.add(infoLbl, BorderLayout.CENTER);
+            pPanelis.add(poguGrupa, BorderLayout.EAST);
+            sarakstaPanelis.add(pPanelis);
+        }
+
+        JScrollPane scroll = VizualaMetodes.izveidotStiliguScrollPane(sarakstaPanelis);
+        
+        JButton atceltBtn = VizualaMetodes.izveidotStiliguPogu("Atcelt", VizualaMetodes.SARKANS_AIZVERT, e -> d.dispose());
+        JPanel apaksasPanelis = new JPanel();
+        apaksasPanelis.setOpaque(false);
+        apaksasPanelis.add(atceltBtn);
+
+        fons.add(lbl, BorderLayout.NORTH);
+        fons.add(scroll, BorderLayout.CENTER);
+        fons.add(apaksasPanelis, BorderLayout.SOUTH);
+
+        VizualaMetodes.padaritParietojamu(fons, d);
+        d.add(fons);
+        d.setVisible(true);
+
+        return izveletais.get();
     }
 }
