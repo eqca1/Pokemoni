@@ -28,10 +28,8 @@ public class VizualaMetodes {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                
                 g2d.setColor(PANELA_FONS);
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 35, 35);
-                
                 g2d.dispose();
             }
         };
@@ -131,22 +129,20 @@ public class VizualaMetodes {
         komponente.addMouseMotionListener(pelesAdapteris);
     }
 
-    public static JLabel ieladetFonu(String failaNosaukums, int platums, int augstums) {
-        JLabel attelaLauks = new JLabel("", SwingConstants.CENTER);
+    public static void ieladetGif(JLabel label, String failaNosaukums) {
+        label.setText(""); 
         try {
-            java.net.URL attelaURL = VizualaMetodes.class.getResource("/" + failaNosaukums);
+            // Meklē failu mapē /atteli/
+            java.net.URL attelaURL = VizualaMetodes.class.getResource("/atteli/" + failaNosaukums);
             if (attelaURL != null) {
-                ImageIcon originalaIkona = new ImageIcon(attelaURL);
-                Image originalaisAttels = originalaIkona.getImage();
-                Image skalotsAttels = originalaisAttels.getScaledInstance(platums, augstums, Image.SCALE_SMOOTH);
-                attelaLauks.setIcon(new ImageIcon(skalotsAttels));
+                ImageIcon gifIcon = new ImageIcon(attelaURL);
+                label.setIcon(gifIcon);
             } else {
-                attelaLauks.setText("ATTĒLS NAV ATRASTS: " + failaNosaukums);
+                label.setText("<html><center>GIF NAV ATRASTS:<br>/atteli/" + failaNosaukums + "</center></html>");
             }
         } catch (Exception e) {
-            attelaLauks.setText("ATTĒLA IELĀDES KĻŪDA: " + e.getMessage());
+            label.setText("Kļūda: " + e.getMessage());
         }
-        return attelaLauks;
     }
     
     public static JTextArea izveidotStiliguTekstaApgabalu() {
@@ -155,7 +151,6 @@ public class VizualaMetodes {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                
                 g2d.setColor(PANELA_FONS);
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
                 g2d.dispose();

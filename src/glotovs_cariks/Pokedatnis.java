@@ -9,6 +9,18 @@ import javax.swing.border.EmptyBorder;
 
 public class Pokedatnis extends JFrame { 
 
+	private static void atskaņotSkanu(String soundFile) {
+	    try {
+	        java.io.File f = new java.io.File(soundFile);
+	        javax.sound.sampled.AudioInputStream ais = javax.sound.sampled.AudioSystem.getAudioInputStream(f.toURI().toURL());
+	        javax.sound.sampled.Clip c = javax.sound.sampled.AudioSystem.getClip();
+	        c.open(ais);
+	        c.start();
+	    } catch (Exception e) {
+	        System.out.println("Nevar atskaņot skaņu: " + soundFile);
+	    }
+	}
+	
     private static Treneris speletajs; 
     private static ArrayList<Pokemons> visiPokemoni = new ArrayList<>(); 
     
