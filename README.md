@@ -1,5 +1,8 @@
 # Pokemoni
 
+<p align="center">
+  <img width="600" height="600" src="https://media.tenor.com/3Sc_Y3SVYYoAAAAi/pok%C3%A9mon-pokemon.gif">
+</p>
 
 > [!IMPORTANT]
 > Funkcionalitāte:
