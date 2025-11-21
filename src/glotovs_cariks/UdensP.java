@@ -38,14 +38,14 @@ public class UdensP extends Pokemons {
 
     public void sanemtBojajumus(int bojajumi) {
         Random rand = new Random();
-        if (rand.nextInt(100) < this.izvairisanasIespeja) {
-            if (this.zemUdens) {
-                if (rand.nextInt(100) < (this.izvairisanasIespeja + 15)) {
-                    return;
-                }
-            } else {
-                return;
-            }
+        int izvairisanasIespeja = this.izvairisanasIespeja;
+        
+        if (this.zemUdens) {
+            izvairisanasIespeja += 15; // zem ūdens bonus
+        }
+        
+        if (rand.nextInt(100) < izvairisanasIespeja) {
+            return; 
         }
         
         if (this.zemUdens) {
