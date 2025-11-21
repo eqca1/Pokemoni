@@ -20,7 +20,7 @@ public class Pokedatnis extends JFrame {
 	        System.out.println("Nevar atskaņot skaņu: " + soundFile);
 	    }
 	}
-	
+
     private static Treneris speletajs; 
     private static ArrayList<Pokemons> visiPokemoni = new ArrayList<>(); 
     
@@ -45,6 +45,9 @@ public class Pokedatnis extends JFrame {
     };
 
     public Pokedatnis() {
+    	
+    	atskaņotSkanu("./audio/music.wav");
+    	
         setTitle("POKEMONI! - Pokemonu Cīņas"); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 700);
@@ -162,14 +165,41 @@ public class Pokedatnis extends JFrame {
     }
     
     public static void saktSpeli() {
-        String vards = Metodes.ievaditTekstu("Sveiks, drosmīgais Pokemonu treneri! Ievadi savu vārdu:");
+        String vards;
         
-        if (vards != null && !vards.isEmpty()) {
-            speletajs = new Treneris(vards);            
-            SwingUtilities.invokeLater(() -> new Pokedatnis());
-        } else {
-            System.exit(0);
+        while (true) {
+            vards = Metodes.ievaditTekstu("Sveiks, drosmīgais Pokemonu treneri! Ievadi savu vārdu:");
+            
+            if (vards == null) {
+                System.exit(0);
+                return;
+            }
+            
+            vards = vards.trim();
+            
+            if (vards.isEmpty()) {
+                Metodes.info("Vārds nevar būt tukšs! Lūdzu, ievadi savu vārdu.");
+                continue;
+            }
+            
+            boolean CiparuP = false;
+            for (char c : vards.toCharArray()) {
+                if (Character.isDigit(c)) {
+                	CiparuP = true;
+                    break;
+                }
+            }
+            
+            if (CiparuP) {
+                Metodes.info("Vārdā nedrīkst būt cipari! Lūdzu, ievadi tikai burtus.");
+                continue;
+            }
+            
+            break;
         }
+        
+        speletajs = new Treneris(vards);            
+        SwingUtilities.invokeLater(() -> new Pokedatnis());
     }
 
     public static void main(String[] args) {
