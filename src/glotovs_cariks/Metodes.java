@@ -44,8 +44,8 @@ public class Metodes {
     }
 
     public static void info(String zinja) {
-        // УВЕЛИЧЕНО: Было 400, 250 -> Стало 600, 450
-        JDialog d = izveidotBazesDialogu(600, 450);
+
+    	JDialog d = izveidotBazesDialogu(600, 450);
         
         JPanel fons = izveidotDialogaFonu(10);
         
@@ -69,8 +69,8 @@ public class Metodes {
     }
 
     public static String ievaditTekstu(String jautajums) {
-        // УВЕЛИЧЕНО: Было 450, 250 -> Стало 500, 300
-        JDialog d = izveidotBazesDialogu(500, 300);
+
+    	JDialog d = izveidotBazesDialogu(500, 300);
         AtomicReference<String> teksts = new AtomicReference<>();
         
         JPanel fons = izveidotDialogaFonu(10);
@@ -180,8 +180,8 @@ public class Metodes {
     }
 
     public static int raditIzveli(String virsraksts, String jautajums, String[] opcijas) {
-        // УВЕЛИЧЕНО: Было 500, 350 -> Стало 600, 450
-        JDialog d = izveidotBazesDialogu(600, 450);
+
+    	JDialog d = izveidotBazesDialogu(600, 450);
         AtomicInteger izvele = new AtomicInteger(-1);
 
         JPanel fons = izveidotDialogaFonu(10);
@@ -227,8 +227,8 @@ public class Metodes {
     }
 
     public static Pokemons izveletiesPokemonuCinai(String virsraksts, List<Pokemons> saraksts) {
-        // УВЕЛИЧЕНО: Было 600, 500 -> Стало 600, 600
-        JDialog d = izveidotBazesDialogu(600, 600);
+
+    	JDialog d = izveidotBazesDialogu(600, 600);
         AtomicReference<Pokemons> izveletais = new AtomicReference<>(null);
 
         JPanel fons = izveidotDialogaFonu(10);
