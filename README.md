@@ -1,7 +1,8 @@
 # Pokemoni
 
 
-## Funkcionalitāte
+
+**Funkcionalitāte**
 
 - [x] Pokemonu izveide
 - [x] Komandas pārvaldība
@@ -21,3 +22,8 @@
  - [x] Metodes – Papildklase
  - [x] VizualaMetodes – Papildklase
 
+
+
+
+> [!CAUTION]
+> :octocat:	
