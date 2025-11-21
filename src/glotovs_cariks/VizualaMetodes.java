@@ -132,13 +132,13 @@ public class VizualaMetodes {
     public static void ieladetGif(JLabel label, String failaNosaukums) {
         label.setText(""); 
         try {
-            // Meklē failu mapē /atteli/
+            // Meklē attelus
             java.net.URL attelaURL = VizualaMetodes.class.getResource("/atteli/" + failaNosaukums);
             if (attelaURL != null) {
                 ImageIcon gifIcon = new ImageIcon(attelaURL);
                 label.setIcon(gifIcon);
             } else {
-                label.setText("<html><center>GIF NAV ATRASTS:<br>/atteli/" + failaNosaukums + "</center></html>");
+                label.setText("<html><center>gif nav atrasts:<br>/atteli/" + failaNosaukums + "</center></html>");
             }
         } catch (Exception e) {
             label.setText("Kļūda: " + e.getMessage());

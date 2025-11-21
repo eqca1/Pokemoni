@@ -27,10 +27,8 @@ public class Pokedatnis extends JFrame {
     private JPanel galvenaisPanelis;
     private float caurspidigums = 0.0f;
     
-    // --- JAUNS: GIF KOMPONENTES ---
-    private JLabel gifLabel; // Lai mēs varētu piekļūt labelim vēlāk
-    
-    // Ievietojiet šeit savu gif failu nosaukumus, kas atrodas src mapē vai resources
+    // Gif
+    private JLabel gifLabel; 
     private static final String[] GIF_MASIVS = {
         "1.gif",
         "2.gif",
@@ -53,7 +51,7 @@ public class Pokedatnis extends JFrame {
     };
 
     public Pokedatnis() {
-        setTitle("Pokedatnis - Pokemonu Cīņu Sistēma"); 
+        setTitle("POKEMONI! - Pokemonu Cīņas"); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 700);
         setUndecorated(true);
@@ -78,7 +76,7 @@ public class Pokedatnis extends JFrame {
         JPanel augsa = new JPanel(new BorderLayout());
         augsa.setOpaque(false);
         
-        JLabel virsraksts = new JLabel("  POKEDATNIS - POKEMONU CĪŅU ARĒNA", SwingConstants.LEFT);
+        JLabel virsraksts = new JLabel("  POKEMONI! - POKEMONU CĪŅU ARĒNA", SwingConstants.LEFT);
         virsraksts.setFont(VizualaMetodes.FONTS_VIRSRKSTS);
         virsraksts.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
         
@@ -97,13 +95,12 @@ public class Pokedatnis extends JFrame {
         kreisaPuse.setLayout(new BorderLayout());
         kreisaPuse.setBorder(new EmptyBorder(20, 20, 20, 20));
         
-        // Inicializējam GIF Labeli
+        // GIF 
         gifLabel = new JLabel("Ielādē GIF...", SwingConstants.CENTER);
         gifLabel.setFont(VizualaMetodes.FONTS_VIRSRKSTS);
         gifLabel.setForeground(VizualaMetodes.TEKSTS_GALVENAIS);
         gifLabel.setPreferredSize(new Dimension(400, 400));
-        
-        // Pirmā ielāde
+       
         atjaunotGif();
         
         kreisaPuse.add(gifLabel, BorderLayout.CENTER);
@@ -113,8 +110,7 @@ public class Pokedatnis extends JFrame {
         labaPuse.setOpaque(false);
         labaPuse.setLayout(new GridLayout(6, 1, 0, 15)); 
 
-        // --- POGAS AR GIF ATJAUNINĀŠANU ---
-        // Katra poga tagad veic darbību UN tad atjauno GIFu
+        // Katra poga veic darbību UN tad atjauno GIFu
         
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Izveidot Jaunu Pokemonu", e -> {
             izveidotPokemonu();
@@ -146,7 +142,7 @@ public class Pokedatnis extends JFrame {
         animacijaParadities();
     }
 
-    // --- METODE GIF ATJAUNINĀŠANAI ---
+    // Metode ar Gif atjaunināšanu
     private void atjaunotGif() {
         Random rand = new Random();
         String nejaussGif = GIF_MASIVS[rand.nextInt(GIF_MASIVS.length)];
@@ -267,7 +263,7 @@ public class Pokedatnis extends JFrame {
             numurs++;
         }
         
-        VizualaMetodes.raditDialogu("VISI POKEMONI POKEDATNĪ - Kopā: " + visiPokemoni.size(), visiPokemoniInfo);
+        VizualaMetodes.raditDialogu("VISI POKEMONI - Kopā: " + visiPokemoni.size(), visiPokemoniInfo);
     }
     
     public static void saktiesCinu() {
@@ -350,7 +346,7 @@ public class Pokedatnis extends JFrame {
             }
             
             if(pretinieks.getDziviba() <= 0) {
-                Metodes.info("=== UZVARA! ===\n" + mansGajiens + "\n\n" + 
+                Metodes.info("UZVARA!\n" + mansGajiens + "\n\n" + 
                            pretinieks.getVards() + " tika pieveikts!\n\n" +
                            mansPokemons.getVards() + " saņēma pieredzi un attīstījās!");
                 mansPokemons.attistit();
@@ -360,12 +356,12 @@ public class Pokedatnis extends JFrame {
             String pretiniekaGajiens = pretinieks.uzbrukt(mansPokemons);
             
             if (mansPokemons.getDziviba() <= 0) {
-                Metodes.info("=== ZAUDĒJUMS! ===\n" + mansGajiens + "\n\nPRETINIEKA GĀJIENS:\n" + 
+                Metodes.info("ZAUDĒJUMS!\n" + mansGajiens + "\n\nPRETINIEKA GĀJIENS:\n" + 
                            pretiniekaGajiens + "\n\nTavs pokemons " + mansPokemons.getVards() + " zaudēja samaņu.");
                 break;
             }
             
-            Metodes.info("=== RAUNDA " + raunds + " REZULTĀTS ===\n" + 
+            Metodes.info("RAUNDA " + raunds + " REZULTĀTS\n" + 
                         "Tavs gājiens:\n" + mansGajiens + "\n\n" +
                         "Pretinieka gājiens:\n" + pretiniekaGajiens + "\n\n" +
                         mansPokemons.getVards() + " HP: " + mansPokemons.getDziviba() + "/" + mansPokemons.getMaxDziviba() + "\n" +
