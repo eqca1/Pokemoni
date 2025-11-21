@@ -12,6 +12,12 @@ public class Treneris {
     }
 
     public void pievienotPokemonu(Pokemons p) {
+        if (komanda.contains(p)) {
+            throw new IllegalArgumentException("Pokemons jau atrodas komandā!");
+        }
+        if (komanda.size() >= 6) { 
+            throw new IllegalStateException("Komanda pilna (maksimums 6 pokemoni)!");
+        }
         komanda.add(p);
     }
 

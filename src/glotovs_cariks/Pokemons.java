@@ -64,7 +64,7 @@ public abstract class Pokemons {
         this.dziviba = this.maxDziviba;
     }
 
-    public String getVards() { return vards; }
+    public String getVards(){ return vards; }
     public int getDziviba() { return dziviba; }
     public int getMaxDziviba() { return maxDziviba; }
     public int getUzbrukumaSpeks() { return uzbrukumaSpeks; }
