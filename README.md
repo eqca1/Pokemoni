@@ -11,7 +11,7 @@
 
 > [!IMPORTANT]
 > Projektā izmantotās klases un to tipi:
-
+>
 > Pokedatnis – Galvēna klase
 > Pokemons – Abstraktā klase/Virsklase
 > ParastaisP – Apakšklase
