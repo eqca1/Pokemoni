@@ -44,7 +44,12 @@ public class Metodes {
     }
 
     public static void info(String zinja) {
+<<<<<<< HEAD
         JDialog d = izveidotBazesDialogu(600, 450);
+=======
+
+    	JDialog d = izveidotBazesDialogu(600, 450);
+>>>>>>> 247f2771d21c9d3ad0bceec73da7101a300e9b64
         
         JPanel fons = izveidotDialogaFonu(10);
         
@@ -68,7 +73,12 @@ public class Metodes {
     }
 
     public static String ievaditTekstu(String jautajums) {
+<<<<<<< HEAD
         JDialog d = izveidotBazesDialogu(500, 300);
+=======
+
+    	JDialog d = izveidotBazesDialogu(500, 300);
+>>>>>>> 247f2771d21c9d3ad0bceec73da7101a300e9b64
         AtomicReference<String> teksts = new AtomicReference<>();
         
         JPanel fons = izveidotDialogaFonu(10);
@@ -178,7 +188,12 @@ public class Metodes {
     }
 
     public static int raditIzveli(String virsraksts, String jautajums, String[] opcijas) {
+<<<<<<< HEAD
         JDialog d = izveidotBazesDialogu(600, 450);
+=======
+
+    	JDialog d = izveidotBazesDialogu(600, 450);
+>>>>>>> 247f2771d21c9d3ad0bceec73da7101a300e9b64
         AtomicInteger izvele = new AtomicInteger(-1);
 
         JPanel fons = izveidotDialogaFonu(10);
@@ -224,7 +239,12 @@ public class Metodes {
     }
 
     public static Pokemons izveletiesPokemonuCinai(String virsraksts, List<Pokemons> saraksts) {
+<<<<<<< HEAD
         JDialog d = izveidotBazesDialogu(600, 600);
+=======
+
+    	JDialog d = izveidotBazesDialogu(600, 600);
+>>>>>>> 247f2771d21c9d3ad0bceec73da7101a300e9b64
         AtomicReference<Pokemons> izveletais = new AtomicReference<>(null);
 
         JPanel fons = izveidotDialogaFonu(10);
