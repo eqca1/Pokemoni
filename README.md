@@ -13,9 +13,9 @@
 > [!IMPORTANT]
 > Projektā izmantotās klases un to tipi:
 
- > [x] Pokedatnis – Galvēna klase
- > [x] Pokemons – Abstraktā klase/Virsklase
- > [x] ParastaisP – Apakšklase
+ * [x] Pokedatnis – Galvēna klase
+ * [x] Pokemons – Abstraktā klase/Virsklase
+ * [x] ParastaisP – Apakšklase
  - [x] ElektriskaisP – Apakšklase
  - [x] UdensP – Apakšklase
  - [x] Treneris – Objekta klase
