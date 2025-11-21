@@ -1,8 +1,8 @@
 # Pokemoni
 
 
-
-**Funkcionalitāte**
+> [!IMPORTANT]
+> Funkcionalitāte:
 
 - [x] Pokemonu izveide
 - [x] Komandas pārvaldība
