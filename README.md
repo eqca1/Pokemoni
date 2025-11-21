@@ -11,13 +11,13 @@
 
 > [!IMPORTANT]
 > Projektā izmantotās klases un to tipi:
->
-> Pokedatnis – Galvēna klase
-> Pokemons – Abstraktā klase/Virsklase
-> ParastaisP – Apakšklase
-> ElektriskaisP – Apakšklase
-> UdensP – Apakšklase
-> Treneris – Objekta klase
-> Metodes – Papildklase
-> VizualaMetodes – Papildklase
+
+ - [x] Pokedatnis – Galvēna klase
+ - [x] Pokemons – Abstraktā klase/Virsklase
+ - [x] ParastaisP – Apakšklase
+ - [x] ElektriskaisP – Apakšklase
+ - [x] UdensP – Apakšklase
+ - [x] Treneris – Objekta klase
+ - [x] Metodes – Papildklase
+ - [x] VizualaMetodes – Papildklase
 
