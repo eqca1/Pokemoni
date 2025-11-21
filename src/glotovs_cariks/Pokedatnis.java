@@ -112,21 +112,25 @@ public class Pokedatnis extends JFrame {
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Izveidot Jaunu Pokemonu", e -> {
             izveidotPokemonu();
             atjaunotGif();
+            atskaņotSkanu("./audio/poga.wav");
         }));
         
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Mana Pokemonu Komanda", e -> {
             paraditManoKomandu();
             atjaunotGif();
+            atskaņotSkanu("./audio/poga.wav");
         }));
         
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Visu Pokemonu Saraksts", e -> {
             paraditVisusPokemonus();
             atjaunotGif();
+            atskaņotSkanu("./audio/poga.wav");
         }));
         
         labaPuse.add(VizualaMetodes.izveidotStiliguPogu("Sākt Cīņu", e -> {
             saktiesCinu();
             atjaunotGif();
+            atskaņotSkanu("./audio/poga.wav");
         }));
 
         saturs.add(kreisaPuse);
@@ -214,7 +218,7 @@ public class Pokedatnis extends JFrame {
         if(kamPiederIndex == -1) return;
         
         String ipasnieks = (kamPiederIndex == 0) ? speletajs.getVards() : "Savvaļas";
-        
+        atskaņotSkanu("./audio/Kpokemons.wav");
         String[] tipi = {"Parastais", "Elektriskais", "Ūdens"};
         int tipsIndex = Metodes.raditIzveli("Pokemona Tips", "Izvēlies pokemona tipu:", tipi);
         if (tipsIndex == -1) return;
