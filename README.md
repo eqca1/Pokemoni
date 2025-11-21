@@ -16,11 +16,11 @@
  * [x] Pokedatnis – Galvēna klase
  * [x] Pokemons – Abstraktā klase/Virsklase
  * [x] ParastaisP – Apakšklase
- - [x] ElektriskaisP – Apakšklase
- - [x] UdensP – Apakšklase
- - [x] Treneris – Objekta klase
- - [x] Metodes – Papildklase
- - [x] VizualaMetodes – Papildklase
+ * [x] ElektriskaisP – Apakšklase
+ * [x] UdensP – Apakšklase
+ * [x] Treneris – Objekta klase
+ * [x] Metodes – Papildklase
+ * [x] VizualaMetodes – Papildklase
 
 
 
