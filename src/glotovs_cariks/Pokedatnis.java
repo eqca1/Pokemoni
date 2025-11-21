@@ -30,13 +30,7 @@ public class Pokedatnis extends JFrame {
     // Gif
     private JLabel gifLabel; 
     private static final String[] GIF_MASIVS = {
-        "1.gif",
-        "2.gif",
-        "3.gif",
-        "4.gif",
-        "5.gif",
-        "6.gif"
-    };
+        "1.gif", "2.gif", "3.gif", "4.gif", "5.gif", "6.gif", "7.gif", "8.gif", "9.gif", "10.gif"};
 
     private static final int DEFAULT_HP = 150;
     private static final int DEFAULT_ATK = 35;
